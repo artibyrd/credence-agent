@@ -15,5 +15,5 @@ Use this skill when deploying, provisioning, or scaffolding sovereign federated 
 ## Architecture Invariants
 - **Multi-Cloud Topology**:
   - GCP: Cloud Run v2 (scale-to-zero, $15.00/mo budget cap, Secret Manager API keys).
-  - Cloudflare: Zero-build static web hosting and DNS edge routing.
+  - Cloudflare: Zero-build static web hosting (0 npm dependencies) and DNS edge routing.
 - **Dry-Run Mode**: All deployment utilities must provide non-destructive `--dry-run` inspection flags.

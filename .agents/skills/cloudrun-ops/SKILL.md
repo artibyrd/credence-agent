@@ -95,3 +95,21 @@ gh secret set GCP_SERVICE_ACCOUNT -R artibyrd/credence -b "credence-cloud-run-sa
 - **Cloud Build Concurrency**:
   - In `cloudbuild.yaml`, configure `waitFor: ['-']` on independent validation stages (`quality-gate` Ruff/Mypy and `test-gate` Pytest) to run them concurrently before container compilation.
 
+---
+
+## 6. Scale-to-Zero Cold Start Optimization Invariants
+
+When deploying containers under `min_instance_count = 0`:
+
+1. **Startup CPU Boost (`startup_cpu_boost = true` / `--cpu-boost`)**:
+   Always enable Startup CPU Boost in Terraform and `gcloud run deploy`. This dynamically allocates 2–4 vCPUs during container boot to accelerate CPU-bound Python imports and AST compilation at $0.00 idle cost.
+2. **Direct Virtualenv Binary Invocation (`PATH="/app/.venv/bin:$PATH"`)**:
+   Execute `credence serve` directly rather than wrapping in `poetry run credence serve`, eliminating ~800–1,000ms of Poetry CLI environment resolution overhead.
+3. **Build-Time Bytecode Precompilation (`compileall`)**:
+   Images must precompile bytecode (`RUN python -m compileall -q /app/.venv /app/credence`) to eliminate on-the-fly AST compilation on cold boots.
+4. **Aggressive HTTP Readiness Probing**:
+   Configure `startup_probe` with `initial_delay_seconds = 1`, `period_seconds = 2`, `timeout_seconds = 2`, and `http_get` against `/health` so Cloud Run detects readiness within ~1.5–2.0s rather than waiting for 10-second default polling windows.
+5. **Execution Environment Gen 2 (`--execution-environment=gen2`)**:
+   Always enforce Second Generation execution environment for dedicated Linux kernel performance and faster filesystem page caching.
+
+

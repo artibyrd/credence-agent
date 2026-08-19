@@ -9,52 +9,55 @@ Use this skill when processing `/learn` proposals, post-mortems, or new operatio
 
 ---
 
-## 1. The 4-Tier Knowledge Taxonomy
+## 1. The 3-Tier Invariant Scalability & Knowledge Placement Architecture
 
-When synthesizing new insights, evaluate each finding against this decision matrix:
+When synthesizing new insights, evaluate each finding against this scalability matrix to prevent context bloat and attention dilution:
 
 ```mermaid
 flowchart TD
-    Insight["New Insight / Finding / Workflow / Fix"] --> Route{"Knowledge Placement Router"}
+    Insight["New Insight / Finding / Invariant"] --> Route{"Knowledge Placement Router"}
     
-    Route -->|"Universal Non-Negotiable Constraint?"| Tier1["Tier 1: AGENTS.md / Project Rules<br/>(Always-on, <1,000 tokens)"]
-    Route -->|"Multi-Step Procedure or Vendor Runbook?"| Tier2["Tier 2: Progressive Skill (.agents/skills/)<br/>(Loaded on-demand)"]
-    Route -->|"Mechanical Command or QA Gate?"| Tier3["Tier 3: Parameterized Justfile<br/>(Execution time)"]
-    Route -->|"Mathematical Proof, Schema, or Spec?"| Tier4["Tier 4: docs/ & Specifications<br/>(Reference documentation)"]
+    Route -->|"Universal P0 Non-Negotiable Constraint?"| Tier0["Tier 0: AGENTS.md / Core Rules<br/>(Always-on, &lt;800 tokens, P0 Safety &amp; Grounding)"]
+    Route -->|"Subsystem-Scoped Rule or Vendor Playbook?"| Tier1["Tier 1: Progressive Skill (.agents/skills/)<br/>(Loaded on-demand, e.g. cloudrun-ops, mesh-cluster)"]
+    Route -->|"Deterministic Syntax / Format / Parity Check?"| Tier2["Tier 2: Shift-Left Automated Test Gate<br/>(test_docs_integrity.py, preflight, Justfile)"]
+    Route -->|"Mathematical Proof, Schema, or Spec?"| Tier3["Tier 3: docs/ & Specifications<br/>(docs/invariants.md reference documentation)"]
 ```
 
-### Tier 1: Core System Invariants (`AGENTS.md`)
+### Tier 0: Universal Core Invariants (`AGENTS.md`)
 - **Loading Mode**: `always_on` (injected on every single turn).
-- **Target Size Budget**: **< 1,000 tokens** total across all sections.
+- **Target Size Budget**: **< 800 tokens** total across all sections.
 - **Strictly Reserved For**:
-  - Critical security boundaries (SSRF rejection, Billion Laughs XML entity protection).
-  - Universal architectural constraints (Zero-npm invariant, $15/mo budget ceiling, scale-to-zero compute).
-  - Immutable cryptographic & protocol contracts (Ed25519 canonical RFC 8785 JSON, Mk1 human review before commits).
-  - Cross-interface behavioral contracts (Non-blocking lifespan startup, synchronous 4-interface parity).
-- **Format**: Concise 1-2 sentence invariant rules. Never embed multi-step execution steps or vendor CLI guides here.
+  - Human review before commits ("Mk1 Eyeball") & explicit target version disclosure.
+  - Critical security boundaries (Network SSRF rejection, Billion Laughs XML entity protection).
+  - Epistemic verbatim grounding ($G=1.00$) and 50% anti-hallucination slashing.
+  - Immutable cryptographic contracts (Ed25519 canonical RFC 8785 JSON, anti-tampering).
+  - Universal 4-interface feature parity & Zero-npm Web Standard.
+  - Session-driven documentation expansion.
+- **Format**: High-density 1-sentence invariant rules. Never embed multi-step execution steps or vendor CLI guides here.
 
-### Tier 2: Specialized Progressive Skills (`.agents/skills/<name>/SKILL.md`)
+### Tier 1: Specialized Progressive Skills (`.agents/skills/<name>/SKILL.md`)
 - **Loading Mode**: On-Demand (Only title and description are in the root prompt; full body loads when activated).
 - **Target Size**: Unlimited per skill (50-200 lines typical).
 - **Best For**:
-  - Multi-step procedural runbooks and troubleshooting workflows.
-  - Vendor-specific operations (`cloudrun-ops`, `white-label-ops`, `chrome-devtools`).
-  - Complex domain simulations (`mesh-cluster`, `epistemic-benchmark`).
-  - Diagnostic and triage playbooks (`a11y-debugging`, `memory-leak-debugging`).
+  - Subsystem-scoped rules (e.g. Cloud Run scale-to-zero cold start optimization in `cloudrun-ops`).
+  - Multi-step procedural runbooks and troubleshooting workflows (`white-label-ops`, `mesh-cluster`).
+  - Complex domain simulations (`epistemic-benchmark`).
 
-### Tier 3: Declarative Automation (`Justfile` & Tooling)
-- **Loading Mode**: Execution Time (invoked by operator or agent).
+### Tier 2: Shift-Left Automated Integrity Test Gates (`tests/test_docs_integrity.py` & `Justfile`)
+- **Loading Mode**: Execution Time (`just check` runs in <0.3s).
 - **Best For**:
-  - Mechanical command shortcuts with parameterization (`just gcp status`, `just test unit`, `just preflight all`).
-  - Automated dependency prerequisite gates (`(preflight "gcloud")`).
-  - Compound QA gates (`just check`, `just doctor`, `just ignite`).
+  - Mechanical constraints that do not require LLM system prompt memory:
+    - Markdown YAML frontmatter validation (`test_all_markdown_files_valid_frontmatter`).
+    - Zero-npm assertion (`test_zero_npm_invariant`).
+    - 7-Manifest version parity across repos (`test_ecosystem_version_parity`).
+    - Sitemap route coverage & deep link validation.
+    - Mermaid WCAG contrast validation.
 
-### Tier 4: Architectural Specifications & Deep Docs (`docs/`)
+### Tier 3: Architectural Specifications & Deep Docs (`docs/`)
 - **Loading Mode**: Manual Reference (viewed via `view_file` or static web).
 - **Best For**:
-  - Mathematical formulas, proofs, and entropy thresholds (e.g. `docs/agent-invariants.md`).
+  - Mathematical formulas, proofs, and entropy thresholds (e.g. `docs/invariants.md`).
   - Schema.org JSON-LD contracts, API specifications, and whitepapers.
-  - Historical architecture blueprints and release history.
 
 ---
 
@@ -90,4 +93,29 @@ Whenever creating or modifying documentation across `credence-docs/`, `credence/
 1. **Rich Registry Metadata**: Every document entry in `DOCS_REGISTRY` (`app.js`) must include a 1-line `desc` and a `keywords` array of relevant terms, tool names, synonyms, and subcommands.
 2. **Master Topic Index Synchronized**: Every new guide, feature, command, or invariant must be linked in `docs/topic-index.md` ("The Marbles in the Oatmeal" directory).
 3. **Cross-Navigation Footers**: End every core tutorial or guide with a "Next Steps & Related Marbles" section.
+
+---
+
+## 4. Documentation Freshness Auditing & Version Provenance
+
+To prevent documentation from presenting obsolete models (e.g. `gemini-1.5`, `gpt-3.5`), deprecated flags, or outdated system architectures as the ecosystem advances:
+
+### Mandatory Frontmatter Provenance Fields
+Every `.md` document in `docs/` and `blog/` must maintain three version provenance fields:
+- `since_version`: The semantic version when the feature/article was first published (e.g. `v1.0.0`, `v1.8.0`).
+- `verified_version`: The most recent semantic version against which the document's code samples, commands, and architecture were audited and verified (e.g. `v1.15.0`).
+- `last_verified`: The ISO-8601 date of the last verification audit (e.g. `2026-08-19`).
+
+### Major Release Documentation Audit Procedure
+During major release cycles:
+1. **Freshness Scan**: Run `pytest tests/test_docs_integrity.py` to assert that all documentation markdown files have valid `since_version` and `verified_version` frontmatter.
+2. **Obsolete Pattern Elimination**: Audit markdown bodies to eliminate legacy CLI patterns (e.g. `poetry run credence serve` &rarr; direct virtualenv execution), outdated LLM models, and deprecated cloud deployment flags.
+3. **Bump Verification Metadata**: Update `verified_version` to target release (e.g. `v1.15.0`) and `last_verified` to the current release date.
+
+### Visual Portal Provenance Badges
+The zero-build docs engine (`app.js`) automatically renders:
+- `✅ Verified in vX.X.X` (green badge) for documents verified in the latest release.
+- `🟡 Verified in vX.X.X` (yellow badge) for documents needing a freshness review.
+- `📦 Added in vX.X.X` (neutral badge) showing historical version provenance.
+
 

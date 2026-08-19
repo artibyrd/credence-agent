@@ -72,3 +72,22 @@ When `/learn` or a session retrospective proposes additions:
    - Explicitly declare the target Semantic Version about to be released (e.g. `v1.7.0` / `v1.8.0`) in the walkthrough briefing.
    - Synchronize updates across all ecosystem `AGENTS.md` files (`credence/AGENTS.md`, `credence-docs/AGENTS.md`, `credence-agent/AGENTS.md`, root `AGENTS.md`).
    - Run `just check` to ensure all frontmatter, integrity tests, and agent checks pass.
+
+---
+
+## 3. Documentation Progressive Disclosure & Search Indexing
+
+Whenever creating or modifying documentation across `credence-docs/`, `credence/docs/`, or landing pages (`credence.run`):
+
+### The 5-Level Progressive Disclosure Hierarchy (Anti-Firehose)
+1. **Level 1: The Hook & Value Prop**: Explain the project in plain English with everyday relatable examples (cut clickbait, spot fallacies, zero AI hallucinations). Never lead with Greek notation ($Q_i$), raw enum identifiers, or complex consensus math.
+2. **Level 2: 60-Second Quickstart**: Provide a 3-step jump-in command card (`curl ... | bash` $\to$ `credence audit <url>` $\to$ `credence tui`).
+3. **Level 3: Everyday Use Cases & Interfaces**: Highlight the 4 ways to use Credence (Terminal CLI, AI Assistant FastMCP, Textual TUI Workstation, Web Report Viewer).
+4. **Level 4: Core Concepts Simply Explained**: Clear intuitive explanations of verbatim grounded quotes, ethical taxonomy standards (SPJ, IEP), satire protection (Poe's Law), and Ed25519 cryptographic receipts.
+5. **Level 5: Deep Dives & Specifications**: Direct, well-organized links to formal proofs, 36 system invariants, P2P mesh dynamics, and multi-cloud operations.
+
+### Concept Searchability & Indexing (Anti-Oatmeal)
+1. **Rich Registry Metadata**: Every document entry in `DOCS_REGISTRY` (`app.js`) must include a 1-line `desc` and a `keywords` array of relevant terms, tool names, synonyms, and subcommands.
+2. **Master Topic Index Synchronized**: Every new guide, feature, command, or invariant must be linked in `docs/topic-index.md` ("The Marbles in the Oatmeal" directory).
+3. **Cross-Navigation Footers**: End every core tutorial or guide with a "Next Steps & Related Marbles" section.
+

@@ -81,3 +81,17 @@ gh secret set GCP_SERVICE_ACCOUNT -R artibyrd/credence -b "credence-cloud-run-sa
   just gcp revisions
   just gcp rollback credence-server-00004-xxx
   ```
+
+---
+
+## 5. Build Context Optimization & Fast Remote Builds
+
+- **Context Exclusion Payload (<5 MB)**:
+  - Always maintain synchronized `.dockerignore` and `.gcloudignore` manifests.
+  - Exclude `.venv/`, `terraform/`, `data/`, `.mypy_cache/`, `.pytest_cache/`, `tests/`, `docs/`, and `web/` so upload archives remain ~2 MB instead of 800+ MB.
+- **Lean Container Builds (`--without dev`)**:
+  - Production `Dockerfile` stages must invoke `poetry install --without dev --no-root` and `poetry install --without dev`.
+  - Use BuildKit cache mounts (`--mount=type=cache,target=/root/.cache/pypoetry`) to preserve package wheel caches across incremental rebuilds.
+- **Cloud Build Concurrency**:
+  - In `cloudbuild.yaml`, configure `waitFor: ['-']` on independent validation stages (`quality-gate` Ruff/Mypy and `test-gate` Pytest) to run them concurrently before container compilation.
+

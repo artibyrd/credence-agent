@@ -151,7 +151,13 @@ When deploying containers under `min_instance_count = 0`:
    - **Step 4**: Submit Cloud Build and deploy Cloud Run from the clean commit SHA.
    - **Step 5**: Execute live health probe (`just gcp probe`) and telemetry observation.
    - **Step 6**: Tag release (`git tag vX.Y.Z`).
+---
 
+## 5. Multi-Plane Live Deployment Verification Gate
 
-
-
+Prior to finalizing any release, verify live health across both Cloud Run compute instances and Cloudflare Edge custom domains using automated Python probe scripts with cache-busting headers (`Cache-Control: no-cache`):
+- Dev Cloud Run: `https://credence-dev-wukzqiyqbq-uc.a.run.app/health`
+- Prod Cloud Run: `https://credence-server-psgqr4nwoq-uc.a.run.app/health`
+- Edge Apex: `https://credence.run/`
+- Edge Docs: `https://docs.credence.run/app.js`
+- Edge Nexus / Reports: `https://credence.nexus/`, `https://credence.report/`

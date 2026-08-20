@@ -146,6 +146,19 @@ Before implementing major structural changes, subject the plan to the **4-Round 
 ### Prompt Context Budget Governance
 - **Strict `< 800-token` Hard Ceiling:** Root `AGENTS.md` must be kept under 800 tokens.
 - **Rule Pruning:** Whenever a new Tier-0 invariant is proposed, audit existing rules. If a rule can be verified mechanically (e.g. frontmatter or sitemaps), move it into `tests/test_docs_integrity.py` (Tier 2).
+---
 
+## 6. Canonical Lexicon Governance & Thematic Ontology
 
+When coining, refactoring, or applying terminology across Credence surfaces (docs, code, CLI, MCP, Web), strictly align with the **5 Cohesive Thematic Families** and **3 Complexity Tiers** defined in `docs/blueprints/terminology-and-ontology-lexicon.md`:
 
+### The 5 Cohesive Thematic Families
+1. 🌿 **Botanical Network & Lifecycle**: Genesis Seeds $\to$ Node Germination (`credence germinate`) $\to$ Sprout Node $\to$ Expanding Roots $\to$ Root Anchor.
+2. 🔭 **Optical & Forensic Grounding**: Verbatim Grounding ($G=1.00$) $\to$ Anti-Hallucination Slashing (50%) $\to$ The Galileo Theorem $\to$ Domain Credence Index (DCI) $\to$ Trust Bands.
+3. 🌤️ **Meteorological Epistemics**: Truth Weather $\to$ Epistemic Drift $\to$ Astroturf Entropy Defense ($H < 0.30$) $\to$ The Pizza Hut Problem $\to$ Newsroom Partition $\to$ Humor Shield & Malice Override (`SPJ-1.6`).
+4. 🏛️ **Sovereign Governance**: The Invariant Bible $\to$ The 500 LOC Ceiling Law $\to$ `compute_*` Naming Standard $\to$ Mk1 Eyeball Invariant $\to$ 4-Phase Lifecycle $\to$ Zero-npm Standard.
+5. ⚡ **Self-Regulating Engine & FinOps**: Feed Sifter $\to$ Autonomous Curiosity Loop (Boredom Engine) $\to$ Curiosity Headroom $\to$ Token Safety Governor $\to$ 4k Pareto Thinking Invariant $\to$ BitTorrent Attestation Relay.
+
+### Disambiguation Invariant
+- **Domain Credence Index (DCI)**: Exclusively denotes longitudinal *publisher/website* credibility and sourcing forensics ($[0.0, 100.0]$).
+- **Subject Expertise ($E_i$)**: Exclusively denotes decentralized *mesh node* historical domain competence ($[0.0, 1.0]$).

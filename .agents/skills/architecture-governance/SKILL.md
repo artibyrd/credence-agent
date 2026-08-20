@@ -38,6 +38,16 @@ Use this skill when refactoring, modularizing, or auditing Python source files a
 
 ---
 
+### 4. Modular Subpackage Architecture for Servers & Services
+Starlette REST and FastMCP 2.0 servers must follow decoupled subpackage layouts:
+- `credence/server/api/`: Individual REST route modules (`analytics.py`, `audits.py`, `cost.py`, `domains.py`, `feeds.py`, `mesh.py`, `system.py`).
+- `credence/server/mcp/`: FastMCP tool modules (`server.py`, `query_tools.py`, `merit_tools.py`, `mesh_tools.py`, `eval_tools.py`, `consensus_tools.py`, `feed_tools.py`, `cost_tools.py`, `resources.py`, `prompts.py`).
+- `credence/server/middleware/`: Security and observability middleware (`security.py`, `rate_limit.py`, `cors.py`, `telemetry.py`).
+- `credence/server/lifespan.py`: Autonomous background daemons (Sifter, Boredom Engine) and startup warmup.
+- `credence/server/app.py`: Lean route assembly and application factory (<150 LOC).
+
+---
+
 ## 2. Shift-Left Contract Verification
 
 Modularity and naming rules are deterministically verified in <0.3s via `tests/governance/test_architecture_governance.py`:

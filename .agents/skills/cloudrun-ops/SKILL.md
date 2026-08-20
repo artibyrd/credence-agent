@@ -91,7 +91,7 @@ gh secret set GCP_SERVICE_ACCOUNT -R artibyrd/credence -b "credence-cloud-run-sa
   - Exclude `.venv/`, `terraform/`, `data/`, `.mypy_cache/`, `.pytest_cache/`, `tests/`, `docs/`, and `web/` so upload archives remain ~2 MB instead of 800+ MB.
 - **Lean Container Builds (`--without dev`)**:
   - Production `Dockerfile` stages must invoke `poetry install --without dev --no-root` and `poetry install --without dev`.
-  - Use BuildKit cache mounts (`--mount=type=cache,target=/root/.cache/pypoetry`) to preserve package wheel caches across incremental rebuilds.
+  - Avoid BuildKit-specific cache mounts (`--mount=type=cache`) in standard `Dockerfile` to maintain 100% compatibility across Cloud Build default builders, local Docker, and GitHub Actions.
 - **Cloud Build Concurrency**:
   - In `cloudbuild.yaml`, configure `waitFor: ['-']` on independent validation stages (`quality-gate` Ruff/Mypy and `test-gate` Pytest) to run them concurrently before container compilation.
 
@@ -108,8 +108,37 @@ When deploying containers under `min_instance_count = 0`:
 3. **Build-Time Bytecode Precompilation (`compileall`)**:
    Images must precompile bytecode (`RUN python -m compileall -q /app/.venv /app/credence`) to eliminate on-the-fly AST compilation on cold boots.
 4. **Aggressive HTTP Readiness Probing**:
-   Configure `startup_probe` with `initial_delay_seconds = 1`, `period_seconds = 2`, `timeout_seconds = 2`, and `http_get` against `/health` so Cloud Run detects readiness within ~1.5–2.0s rather than waiting for 10-second default polling windows.
+   Configure `startup_probe` with `initial_delay_seconds = 0`, `period_seconds = 2`, `timeout_seconds = 2`, `failure_threshold = 30`, and `http_get` against `/health`. This provides a 60s grace window for initial background node germination (sowing preset feeds across tiers) while detecting readiness within ~1.5–2.0s once Uvicorn opens its port.
 5. **Execution Environment Gen 2 (`--execution-environment=gen2`)**:
    Always enforce Second Generation execution environment for dedicated Linux kernel performance and faster filesystem page caching.
+
+---
+
+## 7. Cloud Monitoring & Alerting Filter Invariants
+
+1. **Uptime Check Alert Filters**:
+   Alert policies tracking `monitoring.googleapis.com/uptime_check/check_passed` MUST include `AND resource.type="uptime_url"` in the filter constraint. Omitting `resource.type` results in GCP Error 400.
+2. **Cloud Scheduler Failure Alerts (Log-Based Metrics)**:
+   Do not use unpopulated system metric descriptors like `cloudscheduler.googleapis.com/job/attempt_count` (which fail validation with Error 404 until first scheduled execution). Instead, declare a `google_logging_metric` filtering `resource.type="cloud_scheduler_job" AND (severity>=ERROR OR jsonPayload.status!="SUCCESS")` and alert on the log metric.
+3. **API Activation Prerequisites**:
+   Ensure `cloudscheduler.googleapis.com` is enabled (`gcloud services enable cloudscheduler.googleapis.com`) prior to deploying scheduler resources.
+
+---
+
+## 8. Commit-Before-Deploy Invariant
+
+1. **Immutable Build Provenance**:
+   Cloud Build container images (`gcr.io/.../credence-server:<tag>`) and Cloud Run revisions must strictly correspond to an immutable Git commit SHA (`git rev-parse HEAD`).
+2. **Zero Dirty Deploys**:
+   Never execute `gcloud builds submit`, `gcloud run deploy`, or `just deploy` with unstaged or uncommitted changes in the working tree (`git diff --quiet && git diff --cached --quiet`).
+3. **Release Progression Protocol**:
+   - **Step 1**: Run local test gauntlet (`just check` $\rightarrow$ 100% passing).
+   - **Step 2**: Present working-tree diff & version bump for user Mk1 Eyeball review.
+   - **Step 3**: User approves and commits (`git add -A && git commit -m "..."`).
+   - **Step 4**: Submit Cloud Build and deploy Cloud Run from the clean commit SHA.
+   - **Step 5**: Execute live health probe (`just gcp probe`) and telemetry observation.
+   - **Step 6**: Tag release (`git tag vX.Y.Z`).
+
+
 
 

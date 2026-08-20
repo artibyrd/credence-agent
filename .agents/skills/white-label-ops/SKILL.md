@@ -36,3 +36,21 @@ Use this skill when deploying, provisioning, or scaffolding sovereign federated 
 2. **Asset Boundary Protection**: Include `.assetsignore` containing `_worker.js` and `wrangler.toml` to prevent server-side code from being exposed as static files.
 3. **FastMCP Transport Security**: Always configure `TransportSecuritySettings(enable_dns_rebinding_protection=False, allowed_hosts=["*"], allowed_origins=["*"])` on FastMCP SSE servers behind Cloudflare.
 4. **Origin Header Translation**: Rewrite `Host` header to `<service>.run.app` in `_worker.js` to bypass Google Search Console TXT domain verification roadblocks.
+
+---
+
+## 4. Multi-Environment Boundary & State Isolation
+
+1. **State Isolation**:
+   Always isolate Terraform state per environment (`-state="terraform.{{env}}.tfstate"`), ensuring `terraform.dev.tfstate` and `terraform.prod.tfstate` never collide or cross boundaries.
+2. **Dual-Project GCP Setup**:
+   - Dev Project: `credence-dev-XXXXXX` (Basic Dev, SQLite WAL, 512Mi, Simple Alert Tier).
+   - Prod Project: `credence-prod-XXXXXX` (Advanced Prod, PostgreSQL/R2, 1Gi, Advanced SRE Alert Suite).
+3. **Pre-Existing Secret Import**:
+   When secrets (such as `credence-gemini-api-key`) are pre-created manually, import them into the environment's state before running `apply`:
+   ```bash
+   terraform -chdir=terraform import -state=terraform.<env>.tfstate -var-file=terraform.<env>.tfvars google_secret_manager_secret.gemini_api_key projects/<project_id>/secrets/credence-gemini-api-key
+   ```
+4. **Launch Parity Deployment Workflow**:
+   Sequential release progression: Dev deployment $\rightarrow$ Automated Health Probe $\rightarrow$ Prod deployment $\rightarrow$ Edge Plane Anycast deployment.
+

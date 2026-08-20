@@ -62,3 +62,8 @@ Modularity and naming rules are deterministically verified in <0.3s via `tests/g
 
 ### 5. Content Extraction Fallbacks
 - When using Trafilatura for plain text or markdown extraction, provide a tag-stripping regex fallback (`re.sub(r"<[^>]+>", " ", ...)`). Short HTML fixtures (<100 chars) are discarded by Trafilatura; the fallback prevents empty content string failures in unit tests.
+### 4. Web Component Safety & Zero-Clone Invariant
+When building or extending custom elements / Web Components:
+1. **Never call `cloneNode(true)` on host containers**: In browser engines, cloning a tree containing custom elements triggers recursive constructor execution.
+2. **Synchronous Attribute Observers**: `attributeChangedCallback` must execute pure synchronous state assignments (`this.state.x = val`) and call `this.render()`, with zero asynchronous event loops.
+3. **Defensive Shadow DOM Event Binding**: Null-check all Shadow DOM element lookups (`if (pill) pill.addEventListener(...)`) before attaching listeners.

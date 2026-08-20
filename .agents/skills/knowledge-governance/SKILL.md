@@ -62,22 +62,33 @@ flowchart TD
 
 ---
 
-## 2. Knowledge Routing Workflow (`/remember`)
+## 2. The 4-Phase Delivery & Continuous Learning Lifecycle
 
-When `/learn` or a session retrospective proposes additions:
+Ecosystem development and knowledge synthesis strictly follow a 4-phase sequential progression:
 
-1. **Step 1: Classification & Routing**:
-   - For each proposal, determine whether it is a Universal Invariant (Tier 1), a Progressive Skill (Tier 2), a Justfile Recipe (Tier 3), or Deep Documentation (Tier 4).
-2. **Step 2: Distill Invariants**:
-   - If routing to Tier 1, distill the rule into a single high-density invariant. If it has procedural steps, move those steps into a Tier 2 skill and link to it.
-3. **Step 3: Pruning & Refactoring Audit**:
-   - Inspect `AGENTS.md`. If `AGENTS.md` exceeds 1,000 tokens or contains procedural bloat (e.g., shell commands, multi-step GCP instructions), refactor that content into a dedicated skill in `.agents/skills/`.
-4. **Step 4: Target Version Disclosure & Parity**:
-   - Explicitly declare the target Semantic Version about to be released (e.g. `v1.19.0`) in the walkthrough briefing.
-   - Synchronize updates across all ecosystem `AGENTS.md` files (`credence/AGENTS.md`, `credence-docs/AGENTS.md`, `credence-agent/AGENTS.md`, root `AGENTS.md`).
-5. **Step 5: Roadmap & Horizon Reconciliation**:
-   - Reconcile `docs/roadmap.md` alongside `docs/changelog.md`. Promote shipped items from the "Backlog" to the "Verified Foundation" and capture empirical test findings into upcoming roadmap horizons.
-   - Run `just check` to ensure all frontmatter, integrity tests, and agent checks pass cleanly.
+```mermaid
+flowchart LR
+    Phase1["1. Mk1 Eyeball Review<br/><i>(Code, Local QA, Target Version)</i>"] --> Phase2["2. Feature Release<br/><i>(Commit, Tag, Deploy vX.Y.0)</i>"]
+    Phase2 --> Phase3["3. /learn Retrospective<br/><i>(Capture Feedback & Invariants)</i>"]
+    Phase3 --> Phase4["4. Learning Patch Release<br/><i>(Apply Invariants, Tag vX.Y.1)</i>"]
+```
+
+### Phase 1: Code, Local QA & Mk1 Eyeball Review
+- Implement features with local unit tests, documentation integrity tests, and static checks (`just check`).
+- Present all working-tree diffs, test logs, and explicitly declare the target Semantic Version (e.g. `v1.23.0`) for human inspection ("Mk1 Eyeball").
+
+### Phase 2: Feature Version Release
+- Upon user approval, commit with a clean working tree (`git diff --quiet`).
+- Synchronize version manifests (`just sync-version X.Y.0`), tag git repositories (`just git-sync tag X.Y.0`), push to GitHub (`just git-sync push`), and verify live automated CI/CD deployment on Cloud Run / Cloudflare Edge.
+
+### Phase 3: `/learn` Retrospective
+- Review session corrections, security requirements, and operational discoveries.
+- Classify new insights using the **3-Tier Scalability Architecture** (Tier 0 Universal Invariants, Tier 1 Progressive Skills, Tier 2 Shift-Left Tests, Tier 3 Documentation).
+- Draft and present `learning_proposal.md` for human review.
+
+### Phase 4: Apply Lessons as Patch Release
+- Upon approval of the learning proposal, apply the invariant rules to `AGENTS.md`, update specialized `.agents/skills/`, and add shift-left contract tests in `tests/`.
+- Bump the version to the next patch release (e.g. `vX.Y.1`), run `just check`, present changes for Mk1 review, commit, tag, and push as the **learning patch release**.
 
 ---
 

@@ -120,4 +120,20 @@ The zero-build docs engine (`app.js`) automatically renders:
 - `🟡 Verified in vX.X.X` (yellow badge) for documents needing a freshness review.
 - `📦 Added in vX.X.X` (neutral badge) showing historical version provenance.
 
+---
+
+## 5. Socratic Architecture Pre-Mortems & Prompt Budget Invariants (`/grill-me` & `<800 Tokens`)
+
+### Socratic Architecture Review Checklist (`/grill-me`)
+Before implementing major structural changes, subject the plan to the **4-Round Socratic Interrogation**:
+1. **The Invariant Stress Test:** Does the proposal violate any of Credence's 38 core invariants (e.g. Zero-npm, Hermetic Unit Testing, $G=1.00$ Verbatim Grounding)?
+2. **The Simplicity Veto:** Can this feature be implemented with zero new dependencies using standard library primitives and native W3C standards (WebCrypto, ES Modules)?
+3. **Partition & Partition Resilience:** What happens if the network splits or a Cloud Run instance scales to zero? Is state preserved locally via CAS/WAL?
+4. **Cognitive Economy Audit:** Does this proposal add necessary capabilities without dumping formatting trivia or procedural bloat into root `AGENTS.md`?
+
+### Prompt Context Budget Governance
+- **Strict `< 800-token` Hard Ceiling:** Root `AGENTS.md` must be kept under 800 tokens.
+- **Rule Pruning:** Whenever a new Tier-0 invariant is proposed, audit existing rules. If a rule can be verified mechanically (e.g. frontmatter or sitemaps), move it into `tests/test_docs_integrity.py` (Tier 2).
+
+
 

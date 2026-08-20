@@ -48,6 +48,7 @@ flowchart TD
 - **Best For**:
   - Mechanical constraints that do not require LLM system prompt memory:
     - Markdown YAML frontmatter validation (`test_all_markdown_files_valid_frontmatter`).
+    - Markdown code fence column-0 and syntax validation (`test_all_markdown_code_fences_and_syntax`).
     - Zero-npm assertion (`test_zero_npm_invariant`).
     - 7-Manifest version parity across repos (`test_ecosystem_version_parity`).
     - Sitemap route coverage & deep link validation.
@@ -56,7 +57,7 @@ flowchart TD
 ### Tier 3: Architectural Specifications & Deep Docs (`docs/`)
 - **Loading Mode**: Manual Reference (viewed via `view_file` or static web).
 - **Best For**:
-  - Mathematical formulas, proofs, and entropy thresholds (e.g. `docs/invariants.md`).
+  - The Invariant Bible, mathematical formulas, proofs, and entropy thresholds (e.g. `docs/agent-invariants.md`).
   - Schema.org JSON-LD contracts, API specifications, and whitepapers.
 
 ---

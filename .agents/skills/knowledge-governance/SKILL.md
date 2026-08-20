@@ -83,7 +83,7 @@ When `/learn` or a session retrospective proposes additions:
 
 ## 3. Documentation Progressive Disclosure & Search Indexing
 
-Whenever creating or modifying documentation across `credence-docs/`, `credence/docs/`, or landing pages (`credence.run`):
+Whenever creating or modifying documentation across `credence-docs/` or landing pages (`credence.run`):
 
 ### The 5-Level Progressive Disclosure Hierarchy (Anti-Firehose)
 1. **Level 1: The Hook & Value Prop**: Explain the project in plain English with everyday relatable examples (cut clickbait, spot fallacies, zero AI hallucinations). Never lead with Greek notation ($Q_i$), raw enum identifiers, or complex consensus math.

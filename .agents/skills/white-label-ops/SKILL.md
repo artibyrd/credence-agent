@@ -54,3 +54,23 @@ Use this skill when deploying, provisioning, or scaffolding sovereign federated 
 4. **Launch Parity Deployment Workflow**:
    Sequential release progression: Dev deployment $\rightarrow$ Automated Health Probe $\rightarrow$ Prod deployment $\rightarrow$ Edge Plane Anycast deployment.
 
+---
+
+## 5. Multi-Domain Edge Routing & Zero-Cache CDN Governance
+
+### Complete Multi-Domain Route Matrix
+Every sovereign domain must declare explicit route patterns in `wrangler.toml` across all zones:
+- `credence.run`: `credence.run/*`, `docs.credence.run/*`, `blog.credence.run/*`, `mcp.credence.run/*` (and `dev.` counterparts)
+- `credence.nexus`: `credence.nexus/*`, `seeds.credence.nexus/*` (and `dev.` counterparts)
+- `credence.foundation`: `credence.foundation/*`, `keys.credence.foundation/*` (and `dev.` counterparts)
+- `credence.report`: `credence.report/*` (and `dev.` counterparts)
+
+### Edge Worker Routing & Header Invariants
+1. **Dynamic Pages Proxying (`_worker.js`)**: Decoupled doc and blog runtimes (`docs.credence.run`, `blog.credence.run`) must proxy to `credence-docs.pages.dev` with `Host: credence-docs.pages.dev` and downstream `Cache-Control: no-cache, no-store, must-revalidate` to prevent edge POP staleness.
+2. **Dedicated Root File Mapping**:
+   - `seeds.credence.nexus/` maps to `/peers.json`.
+   - `keys.credence.foundation/` maps to `/root.pub`.
+3. **Static Asset Zero-Cache Policy**: All HTML, JS, JSON, and CSS assets must return `Cache-Control: public, max-age=0, must-revalidate` to ensure instant global deployment propagation.
+4. **CI/CD Automated Zone Purge**: Edge deployment workflows must execute automated Cloudflare zone cache purging (`purge_everything: true`) to invalidate stale POP caches.
+
+

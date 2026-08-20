@@ -54,3 +54,11 @@ Modularity and naming rules are deterministically verified in <0.3s via `tests/g
 - `test_500_loc_ceiling_invariant`: Scans all Python files to verify `len(lines) <= 500`.
 - `test_compute_naming_ontology_invariant`: Parses AST syntax trees across the codebase to ensure zero `calculate_*` or `calc_*` functions exist.
 - `test_zero_npm_web_surfaces_invariant`: Verifies zero `package.json` or `node_modules` on web surfaces.
+
+### 4. SQLModel AsyncSession & Query Conventions
+- **Import Path**: Strictly import `AsyncSession` from `sqlmodel.ext.asyncio.session` (not raw `sqlalchemy.ext.asyncio`).
+- **Execution Method**: Strictly use `await session.exec(stmt)` rather than `session.execute(stmt)` to eliminate runtime deprecation warnings and satisfy mypy typing.
+- **Column Sorting**: Use `col(Model.field).desc()` when sorting query results.
+
+### 5. Content Extraction Fallbacks
+- When using Trafilatura for plain text or markdown extraction, provide a tag-stripping regex fallback (`re.sub(r"<[^>]+>", " ", ...)`). Short HTML fixtures (<100 chars) are discarded by Trafilatura; the fallback prevents empty content string failures in unit tests.

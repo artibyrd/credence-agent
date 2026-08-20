@@ -70,3 +70,6 @@ poetry run pytest tests/test_docs_integrity.py -k "lifecycle or invariant or par
 - 📘 [`docs/agent-invariants.md`](../../../../credence-docs/docs/agent-invariants.md): Living Canon of System Invariants with mathematical formulas.
 - 🏛️ [`docs/blueprints/invariant-scalability-and-knowledge-governance.md`](../../../../credence-docs/docs/blueprints/invariant-scalability-and-knowledge-governance.md): 3-Tier Scalability Architecture Blueprint.
 - 🧠 [`docs/agentic/02-continuous-learning-and-invariant-synthesis.md`](../../../../credence-docs/docs/agentic/02-continuous-learning-and-invariant-synthesis.md): Continuous Learning with `/learn`.
+
+### 4. The Cart-Before-the-Horse Order-of-Operations Check
+- Verify that every proposed implementation plan is topologically sorted: scrubbers & schemas precede APIs, APIs precede UIs/CLI, and empirical tests precede case study essays.

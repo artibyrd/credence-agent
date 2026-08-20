@@ -161,3 +161,7 @@ Prior to finalizing any release, verify live health across both Cloud Run comput
 - Edge Apex: `https://credence.run/`
 - Edge Docs: `https://docs.credence.run/app.js`
 - Edge Nexus / Reports: `https://credence.nexus/`, `https://credence.report/`
+
+### 4. Push-and-Delegate CI/CD Governance
+- Never execute manual local deploy commands (`just deploy`, `gcloud run deploy`) following a `just git-sync push`.
+- All production and dev deployments are authoritatively executed via GitHub Actions CI/CD using Workload Identity Federation.

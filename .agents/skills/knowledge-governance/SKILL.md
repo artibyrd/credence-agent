@@ -72,9 +72,11 @@ When `/learn` or a session retrospective proposes additions:
 3. **Step 3: Pruning & Refactoring Audit**:
    - Inspect `AGENTS.md`. If `AGENTS.md` exceeds 1,000 tokens or contains procedural bloat (e.g., shell commands, multi-step GCP instructions), refactor that content into a dedicated skill in `.agents/skills/`.
 4. **Step 4: Target Version Disclosure & Parity**:
-   - Explicitly declare the target Semantic Version about to be released (e.g. `v1.7.0` / `v1.8.0`) in the walkthrough briefing.
+   - Explicitly declare the target Semantic Version about to be released (e.g. `v1.19.0`) in the walkthrough briefing.
    - Synchronize updates across all ecosystem `AGENTS.md` files (`credence/AGENTS.md`, `credence-docs/AGENTS.md`, `credence-agent/AGENTS.md`, root `AGENTS.md`).
-   - Run `just check` to ensure all frontmatter, integrity tests, and agent checks pass.
+5. **Step 5: Roadmap & Horizon Reconciliation**:
+   - Reconcile `docs/roadmap.md` alongside `docs/changelog.md`. Promote shipped items from the "Backlog" to the "Verified Foundation" and capture empirical test findings into upcoming roadmap horizons.
+   - Run `just check` to ensure all frontmatter, integrity tests, and agent checks pass cleanly.
 
 ---
 

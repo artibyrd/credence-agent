@@ -162,3 +162,9 @@ When coining, refactoring, or applying terminology across Credence surfaces (doc
 ### Disambiguation Invariant
 - **Domain Credence Index (DCI)**: Exclusively denotes longitudinal *publisher/website* credibility and sourcing forensics ($[0.0, 100.0]$).
 - **Subject Expertise ($E_i$)**: Exclusively denotes decentralized *mesh node* historical domain competence ($[0.0, 1.0]$).
+
+### 4. Documentation Consolidation over Proliferation Decision Tree
+When capturing new session learnings or architectural improvements:
+1. **Check Existing Canonical Docs First**: Can this insight expand an existing blueprint, tutorial, or essay? (e.g. adding deployment governance to `the-three-plane-architecture.md`).
+2. **Enrich Rather Than Fragment**: Merge related micro-concepts into deep, authoritative reference documents.
+3. **Threshold for New Documents**: Standalone `.md` files are strictly reserved for major new capabilities, standalone investigative case studies, or new interactive labs.

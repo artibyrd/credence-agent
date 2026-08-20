@@ -165,3 +165,7 @@ Prior to finalizing any release, verify live health across both Cloud Run comput
 ### 4. Push-and-Delegate CI/CD Governance
 - Never execute manual local deploy commands (`just deploy`, `gcloud run deploy`) following a `just git-sync push`.
 - All production and dev deployments are authoritatively executed via GitHub Actions CI/CD using Workload Identity Federation.
+
+### 5. The CI/CD Verification Gate
+- After pushing commits and tags (`just git-sync push`), run `gh run list --limit 1` and `gh run watch` to monitor the GitHub Actions workflow.
+- Only announce release completion after the remote workflow exits with success.

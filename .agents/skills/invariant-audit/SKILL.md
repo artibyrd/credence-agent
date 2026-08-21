@@ -52,6 +52,11 @@ flowchart TD
   6. `credence/web/credence.run/index.html`
   7. `credence-agent/plugin.json`
 
+### 6. Prioritized Cognitive Taxonomy & Invariant Lifecycle Audit
+- Asserts that all 4 `AGENTS.md` files categorize Tier 0 invariants under the **Class α (Sovereign Safety)**, **Class β (Execution Topology)**, and **Class γ (Interface Symmetry)** headers.
+- Audits newly proposed invariants for **Demotion Highway eligibility** (checking if the invariant can be verified deterministically via `test_docs_integrity.py` before adding to `AGENTS.md`).
+- Enforces upward axiomatic consolidation when total Tier 0 word/token budget approaches threshold.
+
 ---
 
 ## 2. Turnkey Audit Execution Commands

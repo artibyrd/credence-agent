@@ -50,14 +50,31 @@ def get_commits_for_branch(repo_path: Path, branch: str) -> list[tuple[str, str]
             commits.append((parts[0], parts[1] if len(parts) > 1 else ""))
     return commits
 
-def generate_pr_markdown(repo_name: str, branch: str, title: str, commits: list[tuple[str, str]]) -> str:
+def get_authorized_codeowners(repo_path: Path) -> set[str]:
+    owners_file = repo_path / ".github" / "CODEOWNERS"
+    if not owners_file.exists():
+        return {"artibyrd"}
+    owners = set()
+    for line in owners_file.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        parts = line.split()
+        for p in parts[1:]:
+            if p.startswith("@"):
+                owners.add(p.lstrip("@").lower())
+    return owners or {"artibyrd"}
+
+def generate_pr_markdown(repo_name: str, branch: str, title: str, commits: list[tuple[str, str]], owners: set[str]) -> str:
     desc = REPO_DESCRIPTIONS.get(repo_name, "Ecosystem Component")
     commits_md = "\n".join(f"- `{sha}` {msg}" for sha, msg in commits) if commits else "- *No discrete commits (synced state)*"
+    owners_str = ", ".join(f"@{o}" for o in sorted(owners))
     
     md = f"""# {title}
 
 > **Plane**: {desc}  
 > **Milestone Branch**: `{branch}` $\\rightarrow$ `main`  
+> **Authorized Approvers**: {owners_str} (`.github/CODEOWNERS`)  
 > **Governance Gate**: **Mk1 Eyeball Human Approval Required**
 
 ---
@@ -92,7 +109,7 @@ This pull request bundles verified architectural milestones, governance enhancem
 ## 👥 Review & Approval Gate ("Mk1 Eyeball")
 - [ ] **Human Architecture Review**: Verify semantic versioning, invariants, and release notes.
 - [ ] **Dev Staging Verification**: Verify live `/health` telemetry on Cloud Run Dev.
-- [ ] **Approval Sign-off**: Required before merging into `main`.
+- [ ] **Authorized Code Owner Sign-off**: Required approval by {owners_str} before merging into `main`.
 """
     return md
 
@@ -105,7 +122,8 @@ def create_or_update_prs(title: str) -> None:
         
         print(f"=== Managing PR for {repo_name} ({branch} -> main) ===")
         commits = get_commits_for_branch(repo_path, branch)
-        body = generate_pr_markdown(repo_name, branch, title, commits)
+        owners = get_authorized_codeowners(repo_path)
+        body = generate_pr_markdown(repo_name, branch, title, commits, owners)
         
         tmp_body_file = repo_path / ".pr_body_tmp.md"
         tmp_body_file.write_text(body, encoding="utf-8")
@@ -155,7 +173,7 @@ def merge_pr(pr_arg: str, force: bool = False) -> None:
         cmd = ["gh", "pr", "view"]
         if pr_arg:
             cmd.append(pr_arg)
-        cmd.extend(["--json", "number,title,reviewDecision,reviews,statusCheckRollup,mergeable,url"])
+        cmd.extend(["--json", "number,title,reviewDecision,reviews,latestReviews,statusCheckRollup,mergeable,url"])
         
         code, out, err = run_cmd(cmd, cwd=repo_path)
         if code != 0:
@@ -166,21 +184,32 @@ def merge_pr(pr_arg: str, force: bool = False) -> None:
         pr_num = pr_data.get("number")
         review_decision = pr_data.get("reviewDecision", "NONE")
         url = pr_data.get("url")
+        latest_reviews = pr_data.get("latestReviews") or []
+        
+        authorized_owners = get_authorized_codeowners(repo_path)
+        approving_authors = {
+            r.get("author", {}).get("login", "").lower()
+            for r in latest_reviews
+            if r.get("state") == "APPROVED"
+        }
+        
+        has_authorized_approval = bool(approving_authors.intersection(authorized_owners))
         
         print(f"PR #{pr_num} ({pr_data.get('title')})")
-        print(f"Review Decision : {review_decision or 'REVIEW_REQUIRED'}")
+        print(f"Authorized Approvers : {', '.join('@' + o for o in sorted(authorized_owners))}")
+        print(f"Review Decision      : {review_decision or 'REVIEW_REQUIRED'}")
+        print(f"Approvals Received   : {', '.join('@' + a for a in sorted(approving_authors)) if approving_authors else 'None'}")
         
         # Check approval gating
-        is_approved = review_decision == "APPROVED"
-        if not is_approved and not force:
-            print(f"⛔ MERGE BLOCKED: PR #{pr_num} requires an approving review ('Mk1 Eyeball') before merging to main.")
+        if not has_authorized_approval and not force:
+            print(f"⛔ MERGE BLOCKED: PR #{pr_num} requires an approving review from an authorized Code Owner ({', '.join('@' + o for o in sorted(authorized_owners))}).")
             print(f"   URL: {url}")
-            print("   To approve on GitHub: Visit the PR URL and click 'Review changes' -> 'Approve'.")
+            print("   To approve on GitHub: An authorized Code Owner must visit the PR and click 'Review changes' -> 'Approve'.")
             print("   To override as administrator, use: just pr merge-force")
             continue
         
-        if force and not is_approved:
-            print("⚠️  WARNING: Admin override active. Merging PR without formal GitHub approval...")
+        if force and not has_authorized_approval:
+            print("⚠️  WARNING: Admin override active. Merging PR without formal Code Owner approval...")
             
         print(f"🚀 Merging PR #{pr_num} into main...")
         merge_cmd = ["gh", "pr", "merge", str(pr_num), "--merge", "--auto"]

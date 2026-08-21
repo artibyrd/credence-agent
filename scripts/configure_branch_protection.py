@@ -31,7 +31,7 @@ PROTECTION_PAYLOAD = {
     "enforce_admins": False,
     "required_pull_request_reviews": {
         "dismiss_stale_reviews": True,
-        "require_code_owner_reviews": False,
+        "require_code_owner_reviews": True,
         "required_approving_review_count": 1,
         "require_last_push_approval": False,
     },

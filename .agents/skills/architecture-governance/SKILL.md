@@ -75,3 +75,7 @@ Modularity and naming rules are deterministically verified in <0.3s via `tests/g
 2. **Sticky Table Headers**: All dense data tables (`.ws-table-container`) must enforce `max-height: 520px; overflow-y: auto;` with sticky header positioning (`thead th { position: sticky; top: 0; background: #111b2e; z-index: 2; }`) so column headers remain visible during deep scrolling.
 3. **Root Asset Isolation**: Never place a fallback `index.html` at the root of `web/` in multi-domain edge deployments, as Cloudflare Workers Static Assets default fallback can mask domain subfolder index files.
 
+
+### 6. Proactive Subsystem Modularization & Serialization Invariants
+- **Day-1 Modular Subpackages**: Any new subsystem anticipated to exceed 300 LOC (such as storage backends, consensus engines, or parsers) must be created directly as a package directory with discrete modules (`engine.py`, `manifest.py`, `transports.py`, `__init__.py`) rather than a monolithic file to strictly uphold the 500 LOC Ceiling Law.
+- **Nested Dataclass/Pydantic Serialization**: When returning `@dataclass` structures containing nested Pydantic `BaseModel` objects from REST API handlers or FastMCP tools, always recursively serialize nested instances (`[b.model_dump() if hasattr(b, 'model_dump') else b for b in dataclass.field]`) to prevent `TypeError: Object of type X is not JSON serializable` in `json.dumps()` / `JSONResponse`.

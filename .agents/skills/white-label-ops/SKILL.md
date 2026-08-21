@@ -48,9 +48,10 @@ Use this skill when deploying, provisioning, or scaffolding sovereign federated 
    - Prod Project: `credence-prod-XXXXXX` (Advanced Prod, PostgreSQL/R2, 1Gi, Advanced SRE Alert Suite).
 3. **Pre-Existing Secret Import**:
    When secrets (such as `credence-gemini-api-key`) are pre-created manually, import them into the environment's state before running `apply`:
-   ```bash
-   terraform -chdir=terraform import -state=terraform.<env>.tfstate -var-file=terraform.<env>.tfvars google_secret_manager_secret.gemini_api_key projects/<project_id>/secrets/credence-gemini-api-key
-   ```
+
+```bash
+terraform -chdir=terraform import -state=terraform.<env>.tfstate -var-file=terraform.<env>.tfvars google_secret_manager_secret.gemini_api_key projects/<project_id>/secrets/credence-gemini-api-key
+```
 4. **Launch Parity Deployment Workflow**:
    Sequential release progression: Dev deployment $\rightarrow$ Automated Health Probe $\rightarrow$ Prod deployment $\rightarrow$ Edge Plane Anycast deployment.
 

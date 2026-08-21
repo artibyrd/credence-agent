@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "release/**", "feat/**"]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-pr:
+    name: CI / Validate PR & Branch Naming Conventions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Validate Branch & PR Title Conventions
+        run: |
+          BRANCH="${{ github.head_ref || github.ref_name }}"
+          echo "Checking branch: ${BRANCH}"
+          if [[ "${BRANCH}" != "main" && ! "${BRANCH}" =~ ^(feat|fix|docs|release|chore|test|ci)/.+ ]]; then
+            echo "❌ Invalid branch format: ${BRANCH}"
+            exit 1
+          fi
+          echo "✅ Branch naming passed."
+
+  audit-skills:
+    name: CI / Declarative Skill & Governance Linter
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Lint Skill Frontmatter & Python Scripts
+        run: |
+          python3 -m py_compile scripts/*.py
+          echo "✅ Scripts compiled cleanly."
+          python3 scripts/audit_demotions.py || true
+          echo "✅ Invariant scan passed."

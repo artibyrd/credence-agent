@@ -26,13 +26,10 @@ flowchart TD
 ### Tier 0: Universal Core Invariants (`AGENTS.md`)
 - **Loading Mode**: `always_on` (injected on every single turn).
 - **Target Size Budget**: **< 800 tokens** total across all sections.
-- **Strictly Reserved For**:
-  - Human review before commits ("Mk1 Eyeball") & explicit target version disclosure.
-  - Critical security boundaries (Network SSRF rejection, Billion Laughs XML entity protection).
-  - Epistemic verbatim grounding ($G=1.00$) and 50% anti-hallucination slashing.
-  - Immutable cryptographic contracts (Ed25519 canonical RFC 8785 JSON, anti-tampering).
-  - Universal 4-interface feature parity & Zero-npm Web Standard.
-  - Session-driven documentation expansion.
+- **Prioritized 3-Class Cognitive Taxonomy**:
+  - **Class α (Alpha) - Sovereign Safety, Custody & Human Authority (P0 Non-Negotiables)**: Human Review ("Mk1 Eyeball"), Verbatim DOM Grounding ($G=1.00$), RFC 8785 Canonical JSON & Ed25519 Custody, Untrusted Ingestion Boundary & SSRF/XML Defense, Clean Scratch Script Approvals.
+  - **Class β (Beta) - Execution Topology, Lifecycle & Release Architecture (P1 Process Boundaries)**: 4-Phase Release & Learning Lifecycle, The Cart-Before-the-Horse Order-of-Operations, Commit-Before-Deploy & Push-and-Delegate CI/CD Gate, 3-Plane Decoupling, Hermetic Unit Test Isolation.
+  - **Class γ (Gamma) - Interface Symmetry, Epistemic Parity & Governance (P2 Ergonomics & Presentation)**: Universal 4-Way Feature Parity, The Epistemic Lensing & Information Pyramid, Session-Driven Documentation Expansion, Dynamic Invariant Canon Naming ("The Invariant Bible"), Multi-Model Sovereignty.
 - **Format**: High-density 1-sentence invariant rules. Never embed multi-step execution steps or vendor CLI guides here.
 
 ### Tier 1: Specialized Progressive Skills (`.agents/skills/<name>/SKILL.md`)
@@ -62,7 +59,45 @@ flowchart TD
 
 ---
 
-## 2. The 4-Phase Delivery & Continuous Learning Lifecycle
+## 2. Invariant Mutability, Constitutional Review & The Demotion Highway
+
+Invariants are not immutable dogmas; they represent the **strongest validated empirical truth at project epoch $t$**. Over time, invariants must be continuously re-evaluated for ongoing merit.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Proposed: /learn Retrospective / Discovery
+    Proposed --> Active: Minted into Living Canon (vX.Y.0)
+    Active --> UnderReview: Milestone Audit (v2.X.0)
+    
+    UnderReview --> Active: Re-affirmed (Merit Holds)
+    UnderReview --> Amended: Scope Refined / Upgraded
+    UnderReview --> Demoted: Promoted to Automated Gate (Tier 2) or Skill (Tier 1)
+    UnderReview --> Retired: Obsolete (Constraint No Longer Exists)
+    
+    Demoted --> [*]
+    Retired --> [*]
+```
+
+### The Invariant Lifecycle State Machine
+1. **`Proposed`**: Synthesized during `/learn` retrospectives or post-mortems. Documented in `learning_proposal.md`.
+2. **`Active`**: Formally adopted and minted into `AGENTS.md` and `docs/invariants.md`.
+3. **`Under Review`**: Evaluated during minor version release boundaries (`v2.X.0`) or constitutional review milestones.
+4. **`Amended`**: Refined, sharpened, or merged with related invariants to adapt to architectural advancements.
+5. **`Demoted` (The Demotion Highway)**: Graduated out of prompt context into automated deterministic test gates (Tier 2) or progressive skills (Tier 1).
+6. **`Retired`**: Archived with rationale in `docs/invariants.md` when the underlying constraint or technology is obsoleted.
+
+### The Demotion Highway (Shift-Left Graduation)
+- **Philosophy**: *If a machine can assert it deterministically in <0.3s, never waste LLM attention tokens prompting for it.*
+- When deterministic static analysis or unit test coverage is built for a Tier 0 invariant, that rule is **demoted** out of `AGENTS.md` and converted into a permanent test gate in `tests/test_docs_integrity.py`.
+- This keeps `AGENTS.md` permanently bounded ($<800$ tokens) regardless of how many versions or invariants are discovered over years of development.
+
+### Upward Axiomatic Consolidation Heuristic
+- When the Tier 0 token budget approaches 800 tokens, tactical invariants must be synthesized upward into higher-order principles rather than expanding the list.
+- *Example*: Consolidating SSRF IP blocking, XML entity injection, and LLM prompt framing into a single **Untrusted Ingestion Boundary & Network Defense** invariant.
+
+---
+
+## 3. The 4-Phase Delivery & Continuous Learning Lifecycle
 
 Ecosystem development and knowledge synthesis strictly follow a 4-phase sequential progression:
 
@@ -92,7 +127,7 @@ flowchart LR
 
 ---
 
-## 3. Documentation Progressive Disclosure & Search Indexing
+## 4. Documentation Progressive Disclosure & Search Indexing
 
 Whenever creating or modifying documentation across `credence-docs/` or landing pages (`credence.run`):
 
@@ -110,7 +145,7 @@ Whenever creating or modifying documentation across `credence-docs/` or landing 
 
 ---
 
-## 4. Documentation Freshness Auditing & Version Provenance
+## 5. Documentation Freshness Auditing & Version Provenance
 
 To prevent documentation from presenting obsolete models (e.g. `gemini-1.5`, `gpt-3.5`), deprecated flags, or outdated system architectures as the ecosystem advances:
 
@@ -134,7 +169,7 @@ The zero-build docs engine (`app.js`) automatically renders:
 
 ---
 
-## 5. Socratic Architecture Pre-Mortems & Prompt Budget Invariants (`/grill-me` & `<800 Tokens`)
+## 6. Socratic Architecture Pre-Mortems & Prompt Budget Invariants (`/grill-me` & `<800 Tokens`)
 
 ### Socratic Architecture Review Checklist (`/grill-me`)
 Before implementing major structural changes, subject the plan to the **4-Round Socratic Interrogation**:
@@ -148,7 +183,7 @@ Before implementing major structural changes, subject the plan to the **4-Round 
 - **Rule Pruning:** Whenever a new Tier-0 invariant is proposed, audit existing rules. If a rule can be verified mechanically (e.g. frontmatter or sitemaps), move it into `tests/test_docs_integrity.py` (Tier 2).
 ---
 
-## 6. Canonical Lexicon Governance & Thematic Ontology
+## 7. Canonical Lexicon Governance & Thematic Ontology
 
 When coining, refactoring, or applying terminology across Credence surfaces (docs, code, CLI, MCP, Web), strictly align with the **5 Cohesive Thematic Families** and **3 Complexity Tiers** defined in `docs/blueprints/terminology-and-ontology-lexicon.md`:
 
@@ -163,8 +198,9 @@ When coining, refactoring, or applying terminology across Credence surfaces (doc
 - **Domain Credence Index (DCI)**: Exclusively denotes longitudinal *publisher/website* credibility and sourcing forensics ($[0.0, 100.0]$).
 - **Subject Expertise ($E_i$)**: Exclusively denotes decentralized *mesh node* historical domain competence ($[0.0, 1.0]$).
 
-### 4. Documentation Consolidation over Proliferation Decision Tree
+### Decision Tree: Documentation Consolidation over Proliferation
 When capturing new session learnings or architectural improvements:
 1. **Check Existing Canonical Docs First**: Can this insight expand an existing blueprint, tutorial, or essay? (e.g. adding deployment governance to `the-three-plane-architecture.md`).
 2. **Enrich Rather Than Fragment**: Merge related micro-concepts into deep, authoritative reference documents.
 3. **Threshold for New Documents**: Standalone `.md` files are strictly reserved for major new capabilities, standalone investigative case studies, or new interactive labs.
+

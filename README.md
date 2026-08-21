@@ -10,11 +10,23 @@ This repository contains the Google Antigravity developer kit, progressive discl
 credence-agent/
 ├── .agents/
 │   └── skills/
+│       ├── architecture-governance/ # 500 LOC Ceiling Law & compute_* ontology
+│       ├── cloudrun-ops/            # Cloud Run compute & cold start tuning
 │       ├── epistemic-benchmark/     # Golden 12 benchmark runner skill
+│       ├── invariant-audit/         # Living Canon & token budget audit
+│       ├── knowledge-governance/    # 4-tier taxonomy & Demotion Highway
 │       ├── mesh-cluster/            # 13-node Watts-Strogatz chaos lab skill
 │       └── white-label-ops/         # White-label federation scaffolding skill
+├── scripts/
+│   ├── audit_demotions.py           # Demotion Highway candidate scanner
+│   └── lint_skills.py               # Skill schema and token economy linter
+├── templates/
+│   └── subagents/                   # Declarative subagent delegation profiles
+│       ├── docs_sync_agent.json
+│       ├── epistemic_auditor.json
+│       └── refactor_sentinel.json
 ├── AGENTS.md                        # Master epistemic invariants and safety rules
-├── plugin.json                      # Antigravity plugin definition (v1.0.0)
+├── plugin.json                      # Antigravity plugin definition (v2.2.2)
 ├── LICENSE                          # Apache-2.0
 └── README.md
 ```

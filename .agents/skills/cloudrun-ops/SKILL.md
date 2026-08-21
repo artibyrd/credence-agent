@@ -90,10 +90,11 @@ gh secret set GCP_DEV_PROJECT_ID -R artibyrd/credence -b "credence-dev-495173"
 - **Cold Boot Timeouts**: Ensure Starlette lifespan auto-germination executes in a background `asyncio.create_task` so the HTTP server yields immediately.
 - **Container OOM (Exit 137)**: If container exits with `Memory limit exceeded`, increase memory with `gcloud run deploy credence-server --memory 1Gi`.
 - **Instant Rollback**: If a newly deployed revision has issues:
-  ```bash
-  just gcp revisions
-  just gcp rollback credence-server-00004-xxx
-  ```
+
+```bash
+just gcp revisions
+just gcp rollback credence-server-00004-xxx
+```
 
 ---
 

@@ -12,37 +12,41 @@ import json
 import subprocess
 import sys
 
-REPOS = [
-    "artibyrd/credence",
-    "artibyrd/credence-docs",
-    "artibyrd/credence-agent",
-]
-
-PROTECTION_PAYLOAD = {
-    "required_status_checks": {
-        "strict": True,
-        "contexts": [
-            "CI / Lint & Type Check (pull_request)",
-            "CI / Hermetic Unit & Gauntlet Suite",
-            "CI / Terraform Validation (pull_request)",
-            "CI / Validate PR & Branch Naming Conventions",
-        ],
-    },
-    "enforce_admins": False,
-    "required_pull_request_reviews": {
-        "dismiss_stale_reviews": True,
-        "require_code_owner_reviews": True,
-        "required_approving_review_count": 1,
-        "require_last_push_approval": False,
-    },
-    "restrictions": None,
-    "allow_force_pushes": False,
-    "allow_deletions": False,
+REPO_CHECKS = {
+    "artibyrd/credence": [
+        "CI / Lint & Type Check (pull_request)",
+        "CI / Hermetic Unit & Gauntlet Suite",
+        "CI / Terraform Validation (pull_request)",
+        "CI / Validate PR & Branch Naming Conventions",
+    ],
+    "artibyrd/credence-docs": [
+        "Zero-Build Deploy",
+    ],
+    "artibyrd/credence-agent": [
+        "CI / Validate PR & Branch Naming Conventions",
+        "CI / Declarative Skill & Governance Linter",
+    ],
 }
 
 def set_branch_protection(repo: str) -> bool:
     print(f"🔒 Configuring branch protection on {repo}:main ...")
-    payload_json = json.dumps(PROTECTION_PAYLOAD)
+    payload = {
+        "required_status_checks": {
+            "strict": True,
+            "contexts": REPO_CHECKS.get(repo, []),
+        },
+        "enforce_admins": False,
+        "required_pull_request_reviews": {
+            "dismiss_stale_reviews": True,
+            "require_code_owner_reviews": True,
+            "required_approving_review_count": 1,
+            "require_last_push_approval": False,
+        },
+        "restrictions": None,
+        "allow_force_pushes": False,
+        "allow_deletions": False,
+    }
+    payload_json = json.dumps(payload)
     cmd = [
         "gh", "api",
         "-X", "PUT",
@@ -53,12 +57,12 @@ def set_branch_protection(repo: str) -> bool:
     if res.returncode != 0:
         print(f"❌ Failed to set protection on {repo}: {res.stderr.strip()}")
         return False
-    print(f"✅ Branch protection active on {repo}:main (1 approval required + CI checks).")
+    print(f"✅ Branch protection active on {repo}:main (Code Owner approval + CI checks).")
     return True
 
 def main():
     success = True
-    for repo in REPOS:
+    for repo in REPO_CHECKS:
         if not set_branch_protection(repo):
             success = False
     if not success:

@@ -62,8 +62,10 @@ Modularity and naming rules are deterministically verified in <0.3s via `tests/g
 
 ### 5. Content Extraction Fallbacks
 - When using Trafilatura for plain text or markdown extraction, provide a tag-stripping regex fallback (`re.sub(r"<[^>]+>", " ", ...)`). Short HTML fixtures (<100 chars) are discarded by Trafilatura; the fallback prevents empty content string failures in unit tests.
-### 4. Web Component Safety & Zero-Clone Invariant
-When building or extending custom elements / Web Components:
-1. **Never call `cloneNode(true)` on host containers**: In browser engines, cloning a tree containing custom elements triggers recursive constructor execution.
-2. **Synchronous Attribute Observers**: `attributeChangedCallback` must execute pure synchronous state assignments (`this.state.x = val`) and call `this.render()`, with zero asynchronous event loops.
-3. **Defensive Shadow DOM Event Binding**: Null-check all Shadow DOM element lookups (`if (pill) pill.addEventListener(...)`) before attaching listeners.
+
+### 6. Web Component & Localhost State Invariants
+1. **Localhost Documentation Link Isolation**: When running web workstations on `localhost` (ports 8000/8080), link normalizers (`normalizeLocalLinks`) must strictly rewrite only sibling web workstation domains (`credence.run`, `credence.report`, `credence.nexus`, `credence.foundation`) to local paths. Authoritative documentation (`docs.credence.run`) and sovereign blog essays (`blog.credence.run`) must preserve their HTTPS URLs with `target="_blank" rel="noopener"` to ensure all modal deep links and invariant references remain operational without requiring background port 8081 daemons.
+2. **Direct 1-Click Action & Bidirectional UI Synchronization**: Workstation features (pinning, filtering, auditing) must prioritize direct in-place actions on primary content cards over modal creation dialogs. Any mutation in global state (e.g., removing a pinned item in a sidebar) must trigger centralized synchronization (`syncAllPinStates()`) across all active cards, catalog grids, and inspector headers.
+3. **Never call `cloneNode(true)` on host containers**: In browser engines, cloning a tree containing custom elements triggers recursive constructor execution.
+4. **Synchronous Attribute Observers**: `attributeChangedCallback` must execute pure synchronous state assignments (`this.state.x = val`) and call `this.render()`, with zero asynchronous event loops.
+5. **Defensive Shadow DOM Event Binding**: Null-check all Shadow DOM element lookups (`if (pill) pill.addEventListener(...)`) before attaching listeners.

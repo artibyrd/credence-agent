@@ -229,9 +229,11 @@ def merge_pr(pr_arg: str, force: bool = False) -> None:
             continue
             
         print(f"🚀 Merging PR #{pr_num} into main...")
-        merge_cmd = ["gh", "pr", "merge", str(pr_num), "--merge", "--auto"]
+        merge_cmd = ["gh", "pr", "merge", str(pr_num), "--merge"]
         if use_admin_merge or force:
             merge_cmd.append("--admin")
+        else:
+            merge_cmd.append("--auto")
             
         m_code, m_out, m_err = run_cmd(merge_cmd, cwd=repo_path)
         if m_code == 0:

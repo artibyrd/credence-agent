@@ -69,3 +69,9 @@ Modularity and naming rules are deterministically verified in <0.3s via `tests/g
 3. **Never call `cloneNode(true)` on host containers**: In browser engines, cloning a tree containing custom elements triggers recursive constructor execution.
 4. **Synchronous Attribute Observers**: `attributeChangedCallback` must execute pure synchronous state assignments (`this.state.x = val`) and call `this.render()`, with zero asynchronous event loops.
 5. **Defensive Shadow DOM Event Binding**: Null-check all Shadow DOM element lookups (`if (pill) pill.addEventListener(...)`) before attaching listeners.
+
+### 7. Dense Workstation Viewport & Zero-Masking Invariant
+1. **Grid Viewport Ceiling**: High-density workstation card grids (Curated Articles, Publisher Catalog, Search Results) must be enclosed within a `.ws-scroll-pane` container with a maximum vertical bound (`max-height: 580px; overflow-y: auto;`) and sleek 6px dark scrollbars to prevent full datasets (16+ items) from expanding the page 2,000px+ vertically.
+2. **Sticky Table Headers**: All dense data tables (`.ws-table-container`) must enforce `max-height: 520px; overflow-y: auto;` with sticky header positioning (`thead th { position: sticky; top: 0; background: #111b2e; z-index: 2; }`) so column headers remain visible during deep scrolling.
+3. **Root Asset Isolation**: Never place a fallback `index.html` at the root of `web/` in multi-domain edge deployments, as Cloudflare Workers Static Assets default fallback can mask domain subfolder index files.
+

@@ -60,7 +60,7 @@ Use this skill when deploying, provisioning, or scaffolding sovereign federated 
 
 ### Complete Multi-Domain Route Matrix
 Every sovereign domain must declare explicit route patterns in `wrangler.toml` across all zones:
-- `credence.run`: `credence.run/*`, `docs.credence.run/*`, `blog.credence.run/*`, `mcp.credence.run/*` (and `dev.` counterparts)
+- `credence.run`: `credence.run/*`, `admin.credence.run/*`, `docs.credence.run/*`, `blog.credence.run/*`, `mcp.credence.run/*` (and `dev.` counterparts)
 - `credence.nexus`: `credence.nexus/*`, `seeds.credence.nexus/*` (and `dev.` counterparts)
 - `credence.foundation`: `credence.foundation/*`, `keys.credence.foundation/*` (and `dev.` counterparts)
 - `credence.report`: `credence.report/*` (and `dev.` counterparts)
@@ -72,5 +72,7 @@ Every sovereign domain must declare explicit route patterns in `wrangler.toml` a
    - `keys.credence.foundation/` maps to `/root.pub`.
 3. **Static Asset Zero-Cache Policy**: All HTML, JS, JSON, and CSS assets must return `Cache-Control: public, max-age=0, must-revalidate` to ensure instant global deployment propagation.
 4. **CI/CD Automated Zone Purge**: Edge deployment workflows must execute automated Cloudflare zone cache purging (`purge_everything: true`) to invalidate stale POP caches.
+5. **Dual-Plane DNS & Worker Binding**: Every domain/subdomain route declared in `wrangler.toml` must have a corresponding CNAME record in Terraform (`terraform/cloudflare.tf`) with `proxied = true`. Edge worker asset lookups via `env.ASSETS.fetch()` must target explicit `.html` files (e.g. `/${prefix}/index.html`) using the incoming `request.url` origin to prevent internal 307 redirect cascades.
+
 
 

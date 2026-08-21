@@ -57,6 +57,11 @@ flowchart TD
 - Audits newly proposed invariants for **Demotion Highway eligibility** (checking if the invariant can be verified deterministically via `test_docs_integrity.py` before adding to `AGENTS.md`).
 - Enforces upward axiomatic consolidation when total Tier 0 word/token budget approaches threshold.
 
+### 7. Permanent Semantic Slug Registry & Invariant Challenger
+- Asserts that all invariant references use canonical slugs (`inv-...`) across `AGENTS.md`, `.github/CODEOWNERS`, and documentation frontmatters (`invariants:`).
+- Runs automated epistemic scrutiny via `just challenge-invariant <slug>` to test necessity, test saturation, amendment, or nullification.
+
+
 ---
 
 ## 2. Turnkey Audit Execution Commands

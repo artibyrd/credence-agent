@@ -110,20 +110,31 @@ flowchart LR
 
 ### Phase 1: Code, Local QA & Mk1 Eyeball Review
 - Implement features with local unit tests, documentation integrity tests, and static checks (`just check`).
-- Present all working-tree diffs, test logs, and explicitly declare the target Semantic Version (e.g. `v1.23.0`) for human inspection ("Mk1 Eyeball").
+- Present all working-tree diffs, test logs, and explicitly declare the target Semantic Version (e.g. `v2.3.0`) for human inspection ("Mk1 Eyeball").
 
-### Phase 2: Feature Version Release
-- Upon user approval, commit with a clean working tree (`git diff --quiet`).
-- Synchronize version manifests (`just sync-version X.Y.0`), tag git repositories (`just git-sync tag X.Y.0`), push to GitHub (`just git-sync push`), and verify live automated CI/CD deployment on Cloud Run / Cloudflare Edge.
+### Phase 2: Feature Milestone Release (`vX.Y.0`)
+- Active development executes on a milestone branch (`release/vX.Y.0` or `feat/...`).
+- Opening or updating a PR triggers automated deployment to Cloud Run Dev (`credence-dev-495173`).
+- Merging to `main` is gated strictly by authorized Code Owner reviews (`.github/CODEOWNERS`), triggering automated production deployments (`credence-prod-505902`).
 
 ### Phase 3: `/learn` Retrospective
 - Review session corrections, security requirements, and operational discoveries.
-- Classify new insights using the **3-Tier Scalability Architecture** (Tier 0 Universal Invariants, Tier 1 Progressive Skills, Tier 2 Shift-Left Tests, Tier 3 Documentation).
-- Draft and present `learning_proposal.md` for human review.
+- Classify new insights using the **4-Tier Knowledge Placement Architecture** (Tier 0 Universal Invariants, Tier 1 Progressive Skills, Tier 2 Shift-Left Tests, Tier 3 Documentation).
+- Draft and present `learning_proposal.md` for human review and explicit approval.
 
-### Phase 4: Apply Lessons as Patch Release
-- Upon approval of the learning proposal, apply the invariant rules to `AGENTS.md`, update specialized `.agents/skills/`, and add shift-left contract tests in `tests/`.
-- Bump the version to the next patch release (e.g. `vX.Y.1`), run `just check`, present changes for Mk1 review, commit, tag, and push as the **learning patch release**.
+### Phase 4: Apply Lessons as Lean Patch Release (`vX.Y.1`)
+- Upon human approval of `learning_proposal.md`, synthesize insights into `.agents/skills/`, `AGENTS.md`, and shift-left tests.
+- Bump the version to the next patch release (e.g. `vX.Y.1`), run `just check`, present changes for Mk1 review, and commit/tag directly on `main` (`just release X.Y.1 "..."`).
+- **Lean Governance Invariant**: Learning patches bypass redundant PR ceremony because the changes consist of declarative skills, documentation, and tests already approved via `learning_proposal.md` and verified locally via `just check`.
+
+### The Lean Governance Matrix
+| Dimension | **Feature Milestone (`vX.Y.0`)** | **Learning Patch Cycle (`vX.Y.1`)** |
+| :--- | :--- | :--- |
+| **Branching Topology** | Feature/Milestone Branch (`release/vX.Y.0`, `feat/...`) | Direct on `main` |
+| **Staging Environment** | Automated Cloud Run Dev via PR (`credence-dev-495173`) | Hermetic Local QA Gate (`just check` in <25s) |
+| **Human Authority Gate** | Code Owner Review on PR + Mk1 Eyeball | `learning_proposal.md` Approval + Mk1 Eyeball |
+| **Delivery Vehicle** | `just pr merge` $\rightarrow$ CI/CD Prod Deploy | `just release vX.Y.1` $\rightarrow$ CI/CD Prod Deploy |
+| **Ceremony Overhead** | High rigor (staged feature changes) | Zero friction (fast crystallization of session wisdom) |
 
 ---
 
@@ -203,4 +214,41 @@ When capturing new session learnings or architectural improvements:
 1. **Check Existing Canonical Docs First**: Can this insight expand an existing blueprint, tutorial, or essay? (e.g. adding deployment governance to `the-three-plane-architecture.md`).
 2. **Enrich Rather Than Fragment**: Merge related micro-concepts into deep, authoritative reference documents.
 3. **Threshold for New Documents**: Standalone `.md` files are strictly reserved for major new capabilities, standalone investigative case studies, or new interactive labs.
+
+---
+
+## 8. The Invariant Challenger Playbook (`just challenge-invariant <slug>`)
+
+The Invariant Challenger (`scripts/challenge_invariant.py`) provides automated epistemic scrutiny of any living invariant to determine if it should remain active in Tier 0 prompt context, be demoted to Tier 2 automated test gates, amended, or nullified.
+
+### The 4 Challenger Dispositions
+```mermaid
+flowchart TD
+    Run["just challenge-invariant <slug>"] --> Evaluate{"Challenger Evaluation"}
+    Evaluate -->|"Cognitive Reasoning / Human Authority Required"| P["1. PRESERVE (Tier 0 Active)"]
+    Evaluate -->|"100% Test Saturated (Mechanical Verification)"| D["2. DEMOTE (Graduate to Tier 2 Test Gate)"]
+    Evaluate -->|"Ecosystem Shift / Refinement Needed"| A["3. AMEND (Sharpen Invariant Scope)"]
+    Evaluate -->|"Technology Obsoleted / Constraint Invalidated"| N["4. NULLIFY / RETIRE (Archive in Invariant Bible)"]
+```
+
+1. **`PRESERVE`**: Invariants requiring subjective cognitive evaluation, human custody, safety boundaries, or complex architectural reasoning remain active in `AGENTS.md` (Tier 0).
+2. **`DEMOTE`**: When an invariant's rules are 100% mechanically covered by deterministic shift-left test suites (`test_docs_integrity.py`), graduate the rule out of LLM prompt memory to save context budget.
+3. **`AMEND`**: Invariants that remain necessary but need updated parameters, new boundary thresholds, or consolidated scope.
+4. **`NULLIFY`**: Obsoleted constraints are retired with documented epistemic rationale in `docs/invariants.md`.
+
+---
+
+## 9. The GitHub PR Author Self-Review & Code Owner Gating Protocol
+
+GitHub branch protection enforces `require_code_owner_reviews: true` on `main`, but platform rules prohibit PR authors from approving their own PRs (`reviewDecision` remains `REVIEW_REQUIRED`).
+
+### Dual-Scenario Governance Model:
+1. **External Contributor PRs (Author $\neq$ Code Owner)**:
+   - When an outside contributor submits a PR, `manage_pr.py` and GitHub branch protection strictly require a formal approving review from a designated Code Owner (`.github/CODEOWNERS`) before merge.
+2. **Sovereign Code Owner Self-Authored PRs (Author $\in$ Code Owners)**:
+   - When the PR is authored directly by the sovereign Code Owner (`@artibyrd`), `manage_pr.py` recognizes that GitHub prevents self-approval reviews.
+   - Upon verifying that all CI/CD checks have passed (`SUCCESS`) and the author provides human Mk1 Eyeball approval, `manage_pr.py` / `just pr merge` executes the merge with repository administrator privileges (`gh pr merge --admin`).
+3. **Extensibility for Growing Maintainer Circles**:
+   - To authorize new human contributors, simply append their GitHub handle to `.github/CODEOWNERS` (e.g. `* @artibyrd @newcontributor`), with zero infrastructure or branch protection reconfiguration needed.
+
 

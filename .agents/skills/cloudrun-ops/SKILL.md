@@ -170,3 +170,35 @@ Prior to finalizing any release, verify live health across both Cloud Run comput
 ### 5. The CI/CD Verification Gate
 - After pushing commits and tags (`just git-sync push`), run `gh run list --limit 1` and `gh run watch` to monitor the GitHub Actions workflow.
 - Only announce release completion after the remote workflow exits with success.
+
+---
+
+## 9. Hermetic Docker Buildx & Stale Secret Purging (`--clear-secrets`)
+
+In automated CI/CD workflows (`deploy-dev.yml`, `deploy-backend.yml`), container builds are executed hermetically on the GitHub runner using `docker buildx` rather than invoking remote `gcloud builds submit`. This eliminates WIF permission requirements on default Google Cloud log buckets.
+
+```yaml
+# 1. Build and Push directly to GCR via Buildx
+- name: Set up Docker Buildx
+  uses: docker/setup-buildx-action@v3
+
+- name: Build and Push Container Image
+  uses: docker/build-push-action@v5
+  with:
+    context: .
+    push: true
+    tags: gcr.io/${{ env.GCP_PROJECT_ID }}/credence-server:${{ github.sha }}
+
+# 2. Deploy to Cloud Run with --clear-secrets
+- name: Deploy to Cloud Run
+  run: |
+    gcloud run deploy ${{ env.CLOUD_RUN_SERVICE }} \
+      --image="gcr.io/${{ env.GCP_PROJECT_ID }}/credence-server:${{ github.sha }}" \
+      --region="us-central1" \
+      --platform="managed" \
+      --allow-unauthenticated \
+      --clear-secrets \
+      --set-env-vars="CREDENCE_ENV=production"
+```
+Passing `--clear-secrets` ensures that stale secret references from earlier revisions are safely purged before applying fresh environment variables.
+

@@ -202,3 +202,20 @@ In automated CI/CD workflows (`deploy-dev.yml`, `deploy-backend.yml`), container
 ```
 Passing `--clear-secrets` ensures that stale secret references from earlier revisions are safely purged before applying fresh environment variables.
 
+
+### 6. Scale-to-Zero Decoupled Heartbeat Pattern (`min_instances = 0`)
+- **Principle**: Never set `min_instances > 0` solely for background cron/daemon tasks (avoids ~$35–$60/mo fixed compute costs).
+- **Pattern**: Pair scale-to-zero Cloud Run with Google Cloud Scheduler. Cloud Scheduler sends periodic authenticated OIDC requests (`POST /cron/boredom`) to wake the container, execute the batch, and let it scale back to 0.
+- **Required GCP APIs**:
+```bash
+gcloud services enable cloudscheduler.googleapis.com run.googleapis.com --project="<PROJECT_ID>"
+```
+- **Least-Privilege Invoker IAM**:
+```bash
+gcloud run services add-iam-policy-binding credence-server \
+    --member="serviceAccount:credence-boredom-cron-sa@<PROJECT_ID>.iam.gserviceaccount.com" \
+    --role="roles/run.invoker" \
+    --region="us-central1"
+```
+- **Hermetic Testing Guardrail**:
+When testing ASGI endpoints with background lifespans, always use `httpx.AsyncClient(transport=ASGITransport(app=app))` with `unittest.mock.patch(..., new_callable=AsyncMock)` to bypass external network calls and prevent test timeouts.

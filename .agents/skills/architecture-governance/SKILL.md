@@ -80,3 +80,24 @@ Use this skill when refactoring, modularizing, or auditing source files, Justfil
 ### 4. Dense Workstation Viewport & Zero-Masking Invariant
 - High-density card grids must be enclosed within `.ws-scroll-pane` (`max-height: 580px; overflow-y: auto;`).
 - Table headers must remain sticky during deep scrolling (`thead th { position: sticky; top: 0; }`).
+
+---
+
+## 5. Fail-Closed UI Architecture & Zero-Mock Telemetry Invariant
+
+### 1. Absolute Prohibition of Synthetic Mock Fallbacks
+- **Zero Mock Data in Live Workstations**: Client scripts in `web/` must NEVER import, define, or fall back to synthetic mock datasets (`MOCK_NODES`, `MOCK_REPORTS`, `mock_claims`).
+- **Simulations Isolated to Docs Playground**: Simulators and chaos models belong exclusively in documentation playground sandboxes (`credence-docs/playground`) or offline research tools (`tools/simulations/`), never in operator workstation bundles (`web/`).
+
+### 2. Mandatory Fail-Closed Empty State Cards
+- When an API endpoint fails, returns an empty array, or is offline:
+  1. Set state explicitly to `STANDALONE`, `NO DATA`, or `CRITERIA PENDING`.
+  2. Render an explicit high-contrast Empty State Card (`.ws-empty-card`) with an explanatory icon (`📡`), title, and remediation instructions.
+  3. Never mask the empty state with synthetic "sample" data.
+
+### 3. Zero Mock Tokens & Synthetic Digests
+- Prohibited in all web surfaces:
+  - Hardcoded Ed25519 keys (e.g. `ed25519:e3b0c44...41a7`).
+  - Hardcoded sparkline trajectories (e.g. `+2.4 pts (Improving)`).
+  - Dummy scores or synthetic consensus badges.
+

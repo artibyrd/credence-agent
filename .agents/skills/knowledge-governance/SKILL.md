@@ -259,4 +259,20 @@ GitHub branch protection enforces `require_code_owner_reviews: true` on `main`, 
 3. **Extensibility for Growing Maintainer Circles**:
    - To authorize new human contributors, simply append their GitHub handle to `.github/CODEOWNERS` (e.g. `* @artibyrd @newcontributor`), with zero infrastructure or branch protection reconfiguration needed.
 
+---
+
+## 10. The Atomic 3-Repo PR Triad & Surgical Diff Isolation Protocol
+
+### 1. Atomic 3-Repo PR Triad
+- **Principle**: The Credence ecosystem consists of 3 synchronized repositories (`credence`, `credence-agent`, `credence-docs`).
+- **Execution**: Feature milestones must always open, stage, and merge companion PRs across all 3 repos concurrently:
+  - `artibyrd/credence#N` (Compute & Web UI)
+  - `artibyrd/credence-agent#N` (Declarative Skills & Invariant Governance)
+  - `artibyrd/credence-docs#N` (Documentation & Changelog)
+- **Staged Version Parity**: Feature branches must update version manifests on the branch before PR creation so the deployed Dev staging environment displays the exact target release version under human review.
+
+### 2. Surgical Diff Isolation & Zero Scope Creep
+- **Principle**: Targeted edits (such as version bumps or localized styling fixes) must strictly touch only the intended lines.
+- **Verification**: Always run `git diff` across all modified files before committing to assert zero unintended layout, tag, or whitespace mutations on untouched pages.
+
 

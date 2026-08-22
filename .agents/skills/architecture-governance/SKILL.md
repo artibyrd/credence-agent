@@ -79,3 +79,19 @@ Modularity and naming rules are deterministically verified in <0.3s via `tests/g
 ### 6. Proactive Subsystem Modularization & Serialization Invariants
 - **Day-1 Modular Subpackages**: Any new subsystem anticipated to exceed 300 LOC (such as storage backends, consensus engines, or parsers) must be created directly as a package directory with discrete modules (`engine.py`, `manifest.py`, `transports.py`, `__init__.py`) rather than a monolithic file to strictly uphold the 500 LOC Ceiling Law.
 - **Nested Dataclass/Pydantic Serialization**: When returning `@dataclass` structures containing nested Pydantic `BaseModel` objects from REST API handlers or FastMCP tools, always recursively serialize nested instances (`[b.model_dump() if hasattr(b, 'model_dump') else b for b in dataclass.field]`) to prevent `TypeError: Object of type X is not JSON serializable` in `json.dumps()` / `JSONResponse`.
+
+---
+
+## 3. Web UI Verification & Epistemic Invariants
+
+### 1. Local-First Headless Browser Verification Protocol (Zero "Homework Deployment")
+- **Principle**: Never push code to PRs or cloud environments without prior local browser verification.
+- **Execution**:
+  1. Spin up a local test server (`uvicorn credence.server.app:create_app --port 8915` or `python -m http.server 8905`).
+  2. Execute automated Playwright tests verifying key user flows across Desktop (1280px), Laptop (1024px), and Mobile (375px) viewports.
+  3. Verify all parameterized URLs (e.g. `viewer.html?url=...`, `history.html?url=...`) and empty query states locally in <2s before committing or pushing.
+
+### 2. The Anti-Truncation & Unabridged Display Invariant
+- **Principle**: In a forensic epistemic verification network where trust relies on verbatim grounding ($G=1.00$), evidence, rule definitions, and taxonomy titles must never be clipped or masked with `...` (`text-overflow: ellipsis; white-space: nowrap`).
+- **Layout Rule**: Balanced UI heights and responsive alignment must be achieved through flexible wrapping containers (`flex-wrap: wrap; gap: 0.75rem`), clear typographic hierarchy, and bounded scroll panes (`.ws-scroll-pane`) — never through ellipsis truncation.
+

@@ -261,3 +261,21 @@ When operating stateful, scale-to-zero workloads on Google Cloud Run:
 6. **Storage Bucket Least-Privilege IAM**:
    The Cloud Run runtime service account (`credence-cloud-run-sa`) must possess `roles/storage.objectAdmin` on the seeds and backup bucket (`gs://<PROJECT_ID>-seeds-nexus`).
 
+---
+
+## 11. Serverless Cold-Boot Node Vitals & Uptime Guard
+
+When computing SRE metrics and telemetry on scale-to-zero serverless platforms (Google Cloud Run):
+
+1. **The Cold-Boot Division Trap**:
+   - On fresh container wake-up or scale-out, `uptime_seconds` can be sub-second or fractional (e.g. 5ms).
+   - Never compute throughput velocity by dividing cumulative historical database records (from SQLite genesis germination) by transient process boot uptime. This causes astronomical rate spikes ($12 / 0.005\text{s} = 144,000\text{--}150,000\text{ audits/min}$).
+2. **Rated Pipeline Capacity Velocity**:
+   - Node throughput velocity must report **Rated Pipeline Capacity**:
+     $$\text{Capacity Velocity} = \frac{60,000\text{ ms / min}}{\text{Pipeline Latency per Audit (ms)}}$$
+   - Profile benchmarks: `FREE` ($120\text{ms} \to 500\text{ audits/min}$), `BALANCED` ($145\text{ms} \to 413.8\text{ audits/min}$), `ULTRA` ($850\text{ms} \to 70.6\text{ audits/min}$).
+3. **Runtime Steady-State Guard**:
+   - Historical rolling throughput calculations strictly require $\ge 10\text{ minutes}$ ($600\text{s}$) of sustained container uptime before factoring in daily audit volumes.
+4. **Pipeline Duration Floor**:
+   - Enforce a minimum duration floor ($\ge 10\text{ms}$) on pipeline duration to prevent sub-millisecond static proxy latencies from rounding down to `0ms / audit`.
+

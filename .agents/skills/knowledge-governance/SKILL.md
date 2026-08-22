@@ -103,19 +103,27 @@ Ecosystem development and knowledge synthesis strictly follow a 4-phase sequenti
 
 ```mermaid
 flowchart LR
-    Phase1["1. Mk1 Eyeball Review<br/><i>(Code, Local QA, Target Version)</i>"] --> Phase2["2. Feature Release<br/><i>(Commit, Tag, Deploy vX.Y.0)</i>"]
-    Phase2 --> Phase3["3. /learn Retrospective<br/><i>(Capture Feedback & Invariants)</i>"]
-    Phase3 --> Phase4["4. Learning Patch Release<br/><i>(Apply Invariants, Tag vX.Y.1)</i>"]
+    Phase1["1. Code & Local QA<br/><i>(just check, tests, linters)</i>"] --> Phase2["2. PR Staging & Dev Probing<br/><i>(deploy-dev.yml, Live Dev Links)</i>"]
+    Phase2 --> Phase3["3. Mk1 Eyeball Review<br/><i>(PR Links + Live Dev Verification)</i>"]
+    Phase3 --> Phase4["4. Feature Release<br/><i>(just pr merge, tag vX.Y.0, Prod Deploy)</i>"]
+    Phase4 --> Phase5["5. /learn Retrospective<br/><i>(learning_proposal.md)</i>"]
+    Phase5 --> Phase6["6. Lean Patch Release<br/><i>(Apply Invariants, Tag vX.Y.1)</i>"]
 ```
 
-### Phase 1: Code, Local QA & Mk1 Eyeball Review
+### Phase 1: Code, Local QA, PR Creation & Dev Deployment Probing
 - Implement features with local unit tests, documentation integrity tests, and static checks (`just check`).
-- Present all working-tree diffs, test logs, and explicitly declare the target Semantic Version (e.g. `v2.3.0`) for human inspection ("Mk1 Eyeball").
+- Push feature branch (`release/vX.Y.0` or `feat/...`) and create PRs across all ecosystem repositories.
+- Monitor automated Dev deployment to Google Cloud Run (`deploy-dev.yml` / `gh run watch`).
+- Probe live Dev endpoints (`https://credence-dev-wukzqiyqbq-uc.a.run.app/health`, `/api/v1/mesh/status`) to confirm operational readiness.
+- Compile `walkthrough.md` with:
+  1. Direct markdown links to all opened Pull Requests.
+  2. Live Dev Environment Interactive Verification Matrix linking specific endpoints and expected telemetry.
+- Present `walkthrough.md` for human inspection ("Mk1 Eyeball").
 
 ### Phase 2: Feature Milestone Release (`vX.Y.0`)
-- Active development executes on a milestone branch (`release/vX.Y.0` or `feat/...`).
-- Opening or updating a PR triggers automated deployment to Cloud Run Dev (`credence-dev-495173`).
-- Merging to `main` is gated strictly by authorized Code Owner reviews (`.github/CODEOWNERS`), triggering automated production deployments (`credence-prod-505902`).
+- Upon receiving explicit human review approval, merge PRs to `main` via Code Owner authority (`just pr merge`).
+- Pull `main`, create release tag `vX.Y.0` across all repositories (`just git-sync tag X.Y.0`), and push to GitHub (`just git-sync push`).
+- Monitor production deployment workflows (`deploy-backend.yml`, `Release`) via `gh run watch`.
 
 ### Phase 3: `/learn` Retrospective
 - Review session corrections, security requirements, and operational discoveries.
@@ -132,9 +140,9 @@ flowchart LR
 | :--- | :--- | :--- |
 | **Branching Topology** | Feature/Milestone Branch (`release/vX.Y.0`, `feat/...`) | Direct on `main` |
 | **Staging Environment** | Automated Cloud Run Dev via PR (`credence-dev-495173`) | Hermetic Local QA Gate (`just check` in <25s) |
-| **Human Authority Gate** | Code Owner Review on PR + Mk1 Eyeball | `learning_proposal.md` Approval + Mk1 Eyeball |
+| **Human Authority Gate** | Code Owner Review on PR + Mk1 Eyeball (with Live Dev Links) | `learning_proposal.md` Approval + Mk1 Eyeball |
 | **Delivery Vehicle** | `just pr merge` $\rightarrow$ CI/CD Prod Deploy | `just release vX.Y.1` $\rightarrow$ CI/CD Prod Deploy |
-| **Ceremony Overhead** | High rigor (staged feature changes) | Zero friction (fast crystallization of session wisdom) |
+| **Ceremony Overhead** | High rigor (staged feature changes & dev verification) | Zero friction (fast crystallization of session wisdom) |
 
 ---
 

@@ -163,11 +163,22 @@ Prior to finalizing any release, verify live health across both Cloud Run comput
 - Edge Docs: `https://docs.credence.run/app.js`
 - Edge Nexus / Reports: `https://credence.nexus/`, `https://credence.report/`
 
-### 4. Push-and-Delegate CI/CD Governance
+### 5.1 Dev Environment Staging & Live Walkthrough Verification
+When preparing milestone reviews:
+1. Every PR opened against `main` automatically triggers `deploy-dev.yml` to build and deploy the compute container to `credence-dev-495173`.
+2. Monitor the run via `gh run watch` to confirm container build, deployment, and live health check step pass.
+3. Construct an Interactive Verification Matrix in `walkthrough.md` linking live Dev endpoints:
+   - Base Service Health: `https://credence-dev-wukzqiyqbq-uc.a.run.app/health`
+   - Dynamic Mesh Status: `https://credence-dev-wukzqiyqbq-uc.a.run.app/api/v1/mesh/status`
+   - SRE & Topology Telemetry: `https://credence-dev-wukzqiyqbq-uc.a.run.app/api/v1/mesh/stats`
+   - SQL Aggregate Rankings: `https://credence-dev-wukzqiyqbq-uc.a.run.app/api/rankings/rules`
+4. Confirm live response payloads before presenting `walkthrough.md` for human Mk1 Eyeball review.
+
+### 5.2 Push-and-Delegate CI/CD Governance
 - Never execute manual local deploy commands (`just deploy`, `gcloud run deploy`) following a `just git-sync push`.
 - All production and dev deployments are authoritatively executed via GitHub Actions CI/CD using Workload Identity Federation.
 
-### 5. The CI/CD Verification Gate
+### 5.3 The CI/CD Verification Gate
 - After pushing commits and tags (`just git-sync push`), run `gh run list --limit 1` and `gh run watch` to monitor the GitHub Actions workflow.
 - Only announce release completion after the remote workflow exits with success.
 

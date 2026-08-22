@@ -275,4 +275,21 @@ GitHub branch protection enforces `require_code_owner_reviews: true` on `main`, 
 - **Principle**: Targeted edits (such as version bumps or localized styling fixes) must strictly touch only the intended lines.
 - **Verification**: Always run `git diff` across all modified files before committing to assert zero unintended layout, tag, or whitespace mutations on untouched pages.
 
+---
+
+## 11. Active Guidance Highway Adherence (Reading & Acting on Justfile Beacons)
+
+### 1. The Point-of-Action Guidance Principle
+- **Dynamic Priming**: Instead of relying on static system prompt memory for complex, multi-phase operational procedures, agents must actively read and strictly follow the **colorized terminal guidance banners** emitted by `Justfile` recipes and automation scripts.
+- **Sequential Execution Assurance**: When a `Justfile` recipe finishes execution, its output provides a dedicated `👉 NEXT STEP:` beacon. Agents should prioritize executing that exact indicated step rather than speculating on alternate or out-of-order procedures.
+
+### 2. The Chained Delivery Lifecycle Beacons
+- `just branch <name>` $\to$ Reminds to adhere to 500 LOC ceiling on all changed files and run `just check`.
+- `just check` $\to$ Prompts to run `just pr create '<title>'` to open staged companion PRs.
+- `just pr create` $\to$ Prompts to monitor `deploy-dev.yml` and probe live Dev links before presenting for Mk1 review.
+- `just pr merge` $\to$ Prompts to pull `main`, run `just sync-version`, and update `docs/changelog.md`.
+- `just sync-version` $\to$ Validates changelog release headers before tagging.
+- `just release` $\to$ Prompts to watch production deployment and trigger `/learn` for continuous improvement.
+
+
 

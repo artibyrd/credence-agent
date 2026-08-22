@@ -56,6 +56,9 @@ gcloud iam service-accounts add-iam-policy-binding "credence-cloud-run-sa@creden
 # 3. Project-Level Least-Privilege Roles
 gcloud projects add-iam-policy-binding "credence-dev-495173" --member="serviceAccount:credence-cloud-run-sa@credence-dev-495173.iam.gserviceaccount.com" --role="roles/run.developer"
 gcloud projects add-iam-policy-binding "credence-dev-495173" --member="serviceAccount:credence-cloud-run-sa@credence-dev-495173.iam.gserviceaccount.com" --role="roles/cloudbuild.builds.builder"
+
+# 4. Storage Bucket Least-Privilege Persistence Role
+gcloud storage buckets add-iam-policy-binding "gs://credence-dev-495173-seeds-nexus" --member="serviceAccount:credence-cloud-run-sa@credence-dev-495173.iam.gserviceaccount.com" --role="roles/storage.objectAdmin"
 ```
 
 ### B. Production Environment (`credence-prod-505902`)
@@ -71,6 +74,9 @@ gcloud iam service-accounts add-iam-policy-binding "credence-cloud-run-sa@creden
 # 3. Project-Level Least-Privilege Roles
 gcloud projects add-iam-policy-binding "credence-prod-505902" --member="serviceAccount:credence-cloud-run-sa@credence-prod-505902.iam.gserviceaccount.com" --role="roles/run.developer"
 gcloud projects add-iam-policy-binding "credence-prod-505902" --member="serviceAccount:credence-cloud-run-sa@credence-prod-505902.iam.gserviceaccount.com" --role="roles/cloudbuild.builds.builder"
+
+# 4. Storage Bucket Least-Privilege Persistence Role
+gcloud storage buckets add-iam-policy-binding "gs://credence-prod-505902-seeds-nexus" --member="serviceAccount:credence-cloud-run-sa@credence-prod-505902.iam.gserviceaccount.com" --role="roles/storage.objectAdmin"
 ```
 
 ### C. Configure GitHub Repository Secrets

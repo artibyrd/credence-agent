@@ -236,3 +236,28 @@ gcloud run services add-iam-policy-binding credence-server \
 ```
 - **Hermetic Testing Guardrail**:
 When testing ASGI endpoints with background lifespans, always use `httpx.AsyncClient(transport=ASGITransport(app=app))` with `unittest.mock.patch(..., new_callable=AsyncMock)` to bypass external network calls and prevent test timeouts.
+
+---
+
+## 10. Serverless Storage Gravity & Cold-Boot Recovery Pattern
+
+When operating stateful, scale-to-zero workloads on Google Cloud Run:
+
+1. **Bundled Cloud SDK Dependencies**:
+   Container images must include cloud storage SDKs (`google-cloud-storage`) in production runtime dependencies (`pyproject.toml`) to prevent silent import failures during container boot.
+2. **Dual-Pointer Cloud Uploads**:
+   Autonomous backup cycles and shutdown hooks must upload both:
+   - An immutable timestamped archive: `gs://<BUCKET>/backups/credence_YYYYMMDD_HHMMSS.db.gz` (and `.manifest.json`)
+   - The canonical pointer: `gs://<BUCKET>/backups/credence_latest.db.gz` (and `.manifest.json`)
+3. **Pre-Boot Hydration & Dynamic Fallback Listing**:
+   On cold container startup, pre-boot restoration hooks must inspect local SQLite audit counts (`<= 10`). If a restore is needed:
+   - First attempt to download `backups/credence_latest.db.gz`.
+   - If `credence_latest.db.gz` is not yet indexed, execute a fallback GCS list query for `backups/credence_*.db.gz` and select the newest timestamped archive.
+   - Verify SHA-256 hash, Ed25519 signature, and `PRAGMA integrity_check;` before hydrating local SQLite WAL storage.
+4. **Dynamic Bucket Auto-Discovery**:
+   Compute instances should dynamically discover `<PROJECT_ID>-seeds-nexus` via GCP instance metadata when `CREDENCE_BACKUP_BUCKET` is not explicitly set in the environment.
+5. **Non-Blocking Asynchronous WAL Checkpointing**:
+   Periodic backups and SIGTERM lifespan shutdown hooks must invoke awaitable asynchronous backups (`create_database_backup_async(upload_cloud=True)`) using `asyncio.to_thread` to isolate SQLite `.backup()` and gzip compression from the ASGI event loop and ensure cloud uploads finish before container shutdown.
+6. **Storage Bucket Least-Privilege IAM**:
+   The Cloud Run runtime service account (`credence-cloud-run-sa`) must possess `roles/storage.objectAdmin` on the seeds and backup bucket (`gs://<PROJECT_ID>-seeds-nexus`).
+

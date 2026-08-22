@@ -54,6 +54,16 @@ terraform -chdir=terraform import -state=terraform.<env>.tfstate -var-file=terra
 ```
 4. **Launch Parity Deployment Workflow**:
    Sequential release progression: Dev deployment $\rightarrow$ Automated Health Probe $\rightarrow$ Prod deployment $\rightarrow$ Edge Plane Anycast deployment.
+5. **Storage Gravity Bucket IAM Policy**:
+   Ensure sovereign organization Terraform templates bind `roles/storage.objectAdmin` on the seeds/backups bucket to the compute runtime service account:
+
+```hcl
+resource "google_storage_bucket_iam_member" "seeds_sa_admin" {
+  bucket = google_storage_bucket.seeds_bucket.name
+  role   = "roles/storage.objectAdmin"
+  member = "serviceAccount:${google_service_account.cloud_run_sa.email}"
+}
+```
 
 ---
 

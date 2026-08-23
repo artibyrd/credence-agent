@@ -138,4 +138,45 @@ To prevent compact workstation layout locks from freezing natural document scrol
 2. **Landing & Documentation Page Freedom**:
    - All document, marketing, and reading surfaces must retain unconstrained natural scrolling (`overflow: auto`, natural document height).
 
+---
+
+## 7. Public-Facing Copy vs. Forensic Deep Lens Boundary (Plain-English Invariant)
+
+### 1. Top-of-Funnel Clarity & Plain-English Imperative
+- **Audience-Centric Communication**: Open Graph social preview cards (`og-card.png`), landing page hero banners, and public embeds must communicate value in clear, accessible plain English (e.g. *"Verify Truth on the Web. Evidence, Not Algorithms"*).
+- **Demarcation of Internal Constants**: Mathematical constants ($G=1.00$, $H<0.30$, $3f+1$, RFC 8785 canonical envelopes) are internal engineering benchmarks. They must NEVER be advertised on top-of-funnel social cards or public hero headers without explanatory context.
+- **Proper Placement**: Reserve mathematical formulas and cryptographic verification tags strictly for Focus Lenses, Deep Forensic Modals, and technical documentation.
+
+---
+
+## 8. Dynamic Origin-Aware Edge Metadata Rewriting
+
+### 1. Multi-Environment Open Graph Parity
+- Edge routers (`_worker.js`) must inspect the incoming request origin (`url.origin` / `Host`) and dynamically rewrite `<meta property="og:image">` and `<meta property="og:url">` using streaming `HTMLRewriter`.
+- **Zero Hardcoded Cross-Origin Escape**: Previews shared from staging/dev environments (e.g. `https://dev.credence.nexus`) must resolve their assets from the active preview domain without 404 image load failures or escaping to production.
+
+---
+
+## 9. Unified Checkmark Shield Brand & Favicon Suite
+
+### 1. Canonical Vector Asset
+- All web surfaces, navigation headers, and modal footers must reference the official Cyan Gradient Glow Checkmark Shield ([`assets/logo.svg`](file:///home/pendragon/Projects/credence-ecosystem/credence/web/assets/logo.svg)).
+
+### 2. Universal Favicon Suite
+- All HTML templates must include standard favicons:
+  - Vector Favicon: `<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">`
+  - Raster Favicon: `<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">`
+  - Apple Touch Icon: `<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">`
+
+---
+
+## 10. Interactive Diagram Readability & Vertical Ergonomics
+
+### 1. Vertical Hierarchy over Horizontal Spread
+- Flowcharts embedded in narrow reading columns must use vertical flow (`flowchart TD`, `direction TB`) and multi-line labels (`<br/>`) rather than wide horizontal subgraphs (`flowchart LR`) to prevent SVG coordinate shrinkage.
+
+### 2. Interactive Pan-Zoom Toolbar & Fullscreen Lightbox Modal
+- Diagram rendering engines must provide interactive window controls (`0.75x` to `3.0x` zoom, pan-to-scroll) and a native `<dialog>` lightbox modal with WCAG 2.1 AA/AAA dark slate palette (`#1e293b` fills, `#38bdf8` borders).
+
+
 

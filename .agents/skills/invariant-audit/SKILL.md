@@ -94,3 +94,14 @@ When writing or modifying unit tests (`@pytest.mark.unit`) that execute pipeline
   `assert report.classification in ("LOW_SUSPICION", "SUSPICIOUS", "DECEPTIVE")`
 - **Zero Mock Data Invariant**: Never mock LLM responses in unit tests unless explicitly tagged with `@pytest.mark.mock`. Real heuristic code paths must execute cleanly offline.
 
+---
+
+## 5. Shift-Left Node.js Markdown Parser & AST Integrity Gates
+
+When modifying client-side markdown parsers (`credence-docs/app.js`) or adding new markdown documentation:
+- **Comprehensive Document Scan**: Pre-commit test `test_javascript_markdown_parser_runtime_integrity` in `tests/governance/test_docs_integrity.py` executes the actual `parseMarkdown()` function via Node.js across all 189+ markdown documents.
+- **Zero Unrendered Blockquote Leaks**: Asserts zero occurrences of raw `>` or `<p>&gt;` tokens in rendered output.
+- **Container Hygiene**: Asserts that multi-line callouts (`> [!NOTE]`) are properly wrapped in a single `.alert-box` rather than broken into disconnected `<p>` or `<blockquote>` fragments.
+
+
+

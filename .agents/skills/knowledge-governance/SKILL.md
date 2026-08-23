@@ -303,9 +303,9 @@ GitHub branch protection enforces `require_code_owner_reviews: true` on `main`, 
 
 ## 12. Staged Semantic Versioning & Edge Subpath Proxy Invariants
 
-### 1. Staged Semantic Version Sync Before PR Creation
-- Feature branches must synchronize semantic versions across all 7 manifests (`just sync-version <version>`) **prior** to opening pull requests (`just pr create`).
-- This guarantees that automated Dev deployments (`deploy-dev.yml`) and Cloudflare Preview builds display the authoritative milestone version for human review.
+### 1. Staged Semantic Version Sync Before Dev Staging & PR Creation
+- Feature branches must synchronize semantic versions across all 7 manifests (`just sync-version <version>`) **prior** to opening pull requests (`just pr create`) and deploying to Dev (`deploy-dev.yml`).
+- This guarantees that automated Dev deployments (`deploy-dev.yml`), `/health` endpoints, and Cloudflare Preview builds display the authoritative target milestone version for human review rather than conflating new changes with previous releases.
 
 ### 2. Multi-Domain Edge Proxy Subpath Preservation
 - When proxying dedicated subdomains (`docs.credence.run`, `blog.credence.run`) to static asset buckets (Cloudflare Pages), the edge router (`_worker.js`) must preserve full directory paths (e.g. `/docs/intro.md`, `/blog/essay.md`) without prefix stripping.
@@ -321,6 +321,16 @@ if (md.trim().startsWith('<!DOCTYPE html>') || md.trim().startsWith('<html') || 
 ```
 
 This prevents SPA 404 fallback HTML documents from ever rendering nested navbars into content bodies.
+
+---
+
+## 13. Multi-Line Markdown Callout & Blockquote Parser Invariant
+
+### 1. Contiguous Block Slurping & Recursive AST Evaluation
+- **Cohesive Container Slurping**: Zero-build markdown state machines must slurp all contiguous blockquote lines (`> ...`), including empty blockquote spacing lines (`>` or `> `), into a unified container before parsing.
+- **Recursive AST Ingestion**: Strip leading `^\s*>\s?` across all collected sublines and pass the joined content to `parseMarkdown()`. This ensures inner headings (`### ...`), bullet/numbered lists, inline math, bold, and code blocks render correctly inside alert callout boxes (`.alert-box`).
+- **Fail-Closed Tag Matching**: Raw HTML tag detection must never match bare blockquote markers (`>`); use strict tag start regex (`HTML_TAG_START_REGEX = /^<([a-z][a-z0-9]*)\b[^>]*>/i`) rather than shallow checks like `line.trim().endsWith('>')`.
+
 
 
 

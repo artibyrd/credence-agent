@@ -7,7 +7,7 @@ Welcome to the **Credence** codebase (`/home/pendragon/Projects/credence`).
 ## 1. Tier 0: Universal Core Invariants (Prioritized Cognitive Hierarchy)
 
 ### Class α (Alpha): Sovereign Safety, Custody & Human Authority (P0 Non-Negotiables)
-- **`inv-mk1-eyeball` — Human Review Gate ("Mk1 Eyeball") with Staged PRs & Live Dev Links**: Tags, PR merges, and prod deploys require human Mk1 sign-off. Verify changes locally in browser/CLI first; link open 3-repo PRs and live Dev endpoints after monitoring `deploy-dev.yml` before review.
+- **`inv-mk1-eyeball` — Human Review Gate ("Mk1 Eyeball") with Staged PRs & Live Dev Links**: Tags, PR merges, and prod deploys require human Mk1 sign-off. Zero speculative UI additions. Verify locally first; link open 3-repo PRs and live Dev endpoints after monitoring `deploy-dev.yml` before review.
 - **`inv-verbatim-grounding` — Epistemic Verbatim Grounding ($G=1.00$) & Anti-Truncation UI**: Citations match source DOM text character-for-character with zero ellipsis masking on rules or forensic evidence. Hallucinations incur an autonomous 50% score slash.
 - **`inv-canonical-json-ed25519` — RFC 8785 Canonical JSON & Ed25519 Custody**: Envelopes use RFC 8785 canonical bytes with UTC timestamps; payload alterations invalidate Ed25519 verification.
 - **`inv-untrusted-ingestion` — Untrusted Ingestion Boundary & Network Defense**: Block cloud metadata (`169.254.169.254`, `metadata.google.internal`), loopback, and private IPs unless `allow_local=True`. Reject `<!DOCTYPE` / `<!ENTITY>`. Wrap LLM inputs in `<untrusted_source_text>`.
@@ -15,15 +15,15 @@ Welcome to the **Credence** codebase (`/home/pendragon/Projects/credence`).
 
 ### Class β (Beta): Execution Topology, Lifecycle & Release Architecture (P1 Process Boundaries)
 - **`inv-incremental-commits-staging` — Incremental Commits & Staging Topology**: Feature branches (`feat/...`, `release/...`) deploy to Dev (`credence-dev-495173`); `main` merges require Code Owner review (`.github/CODEOWNERS`) and deploy to Prod (`credence-prod-505902`) and Edge.
-- **`inv-4phase-release-learning` — 4-Phase Release & Lean Learning Lifecycle**: 1. Code & Local QA (`just check`) $\rightarrow$ 2. Open Staged PR Triad & Watch Dev Deploy $\rightarrow$ 3. **Mk1 Review (live Dev links)** $\rightarrow$ 4. Merge PRs, Tag Release (`vX.Y.0`), Watch Prod $\rightarrow$ 5. `/learn` $\rightarrow$ 6. Lean Patch (`vX.Y.1`).
+- **`inv-4phase-release-learning` — 4-Phase Release & Lean Learning Lifecycle**: 1. Code & Local QA (`just check`) $\rightarrow$ 2. Open Staged PR Triad & Dev Deploy $\rightarrow$ 3. **Mk1 Review (live Dev links)** $\rightarrow$ 4. Merge, Tag (`vX.Y.0`), Prod Deploy $\rightarrow$ 5. `/learn` $\rightarrow$ 6. Lean Patch (`vX.Y.1`).
 - **`inv-cart-before-horse` — The Cart-Before-the-Horse Order-of-Operations Invariant**: Prerequisite models and scrubbers must precede downstream APIs, UIs, and tests. Verify tests before drafting case studies.
-- **`inv-commit-before-deploy` — Commit-Before-Deploy & Push-and-Delegate with CI/CD Verification Gate**: Clean working tree before tags. Never push without human Mk1 sign-off. Post-push, verify GitHub Actions (`gh run watch` / `just pipeline watch`) instead of local deploys.
+- **`inv-commit-before-deploy` — Commit-Before-Deploy & Push-and-Delegate with CI/CD Verification Gate**: Clean tree before tags. Never push without Mk1 sign-off. Post-push, verify GitHub Actions (`gh run watch`) instead of local deploys.
 - **`inv-3plane-governance` — 3-Plane Deployment Governance**: 3 decoupled planes: **Edge Plane** (`web/`, `credence-docs`), **Compute Plane** (`credence-server`), and **Infra Plane** (Terraform).
-- **`inv-dual-env-least-privilege-cicd` — Dual-Environment Least-Privilege CI/CD**: Keyless WIF with `permissions: { id-token: write }`, repo assertions, and least-privilege roles.
+- **`inv-dual-env-least-privilege-cicd` — Dual-Environment Least-Privilege CI/CD & Dev Preview Isolation**: Keyless WIF with least-privilege roles. Cloudflare Pages dev deploys use `--branch=dev` (never `main`); dev proxies route to preview endpoints with zero escape to prod.
 - **`inv-hermetic-unit-tests` — Hermetic Unit Test Isolation & Zero-Browser CI**: Unit tests (`@pytest.mark.unit`) execute in-memory in <35s with zero browser runtimes or daemons.
 
 ### Class γ (Gamma): Interface Symmetry, Epistemic Parity & Governance (P2 Ergonomics & Presentation)
-- **`inv-4way-parity-symmetric-web` — Universal 4-Way Feature Parity & Symmetric Web Invariant**: Feature parity across **CLI**, **FastMCP 2.0**, **TUI**, and **Zero-Build Web UI** (`web/`). Vanilla HTML5/ES modules with **zero npm dependencies**. Navigation has 5 invariant links (`Home`, `Docs`, `Reports`, `Nexus`, `Foundation`).
+- **`inv-4way-parity-symmetric-web` — Universal 4-Way Feature Parity & Symmetric Web Invariant**: Feature parity across **CLI**, **FastMCP 2.0**, **TUI**, and **Zero-Build Web UI** (`web/`). Vanilla HTML5/ES modules, **zero npm dependencies**, 5 invariant nav links (`Home`, `Docs`, `Reports`, `Nexus`, `Foundation`).
 - **`inv-epistemic-lensing` — The Epistemic Lensing & Information Pyramid Invariant**: 3-tier hierarchy: Surface Lens (Glance — score gauge), Focus Lens (Explore — claims, sparklines), and Deep Spectrum Lens (Forensic — signatures, DOM hash).
 - **`inv-documentation-expansion` — Session-Driven Documentation Expansion & Anti-Proliferation Rule**: Deepen canonical docs and blueprints over creating shallow standalone files.
 - **`inv-living-canon` — Dynamic Invariant Canon ("The Invariant Bible")**: Reference system invariants as **The Invariant Bible** or **Living Canon of System Invariants** without hardcoded numbers.

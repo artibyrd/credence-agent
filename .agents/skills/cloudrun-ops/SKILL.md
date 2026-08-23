@@ -279,3 +279,24 @@ When computing SRE metrics and telemetry on scale-to-zero serverless platforms (
 4. **Pipeline Duration Floor**:
    - Enforce a minimum duration floor ($\ge 10\text{ms}$) on pipeline duration to prevent sub-millisecond static proxy latencies from rounding down to `0ms / audit`.
 
+---
+
+## 12. Multi-Plane Edge Routing & Dev Preview Isolation Playbook
+
+When deploying decoupled edge routing between Production and Dev environments on Cloudflare Workers and Cloudflare Pages:
+
+1. **Wrangler Route Decoupling**:
+   - Top-level `routes = [...]` in `web/wrangler.toml` MUST contain ONLY production apex and production subdomains (`credence.run/*`, `credence.nexus/*`, `credence.report/*`, `credence.foundation/*`, `admin.credence.run/*`, `docs.credence.run/*`).
+   - Dev preview routes (`dev.credence.run/*`, `dev.credence.nexus/*`, etc.) MUST be strictly isolated under `[env.dev]` block. Never mix dev routes in top-level production routes to prevent worker route assignment collisions.
+2. **Cloudflare Pages Branch Isolation**:
+   - Feature branches and dev preview CI (`deploy-dev.yml`) MUST deploy using `--branch=dev` (or `--branch=${{ github.head_ref }}`), publishing exclusively to `https://dev.credence-docs.pages.dev`.
+   - Only production releases (`deploy-edge.yml`) on `main` may pass `--branch=main` (publishing to `https://docs.credence.run`).
+3. **Edge Worker Reverse Proxying for Sub-Subdomains**:
+   - Cloudflare Pages custom domains cannot bind to multi-level subdomains (`dev.docs.credence.run`) without zone-level DNS permissions.
+   - The Edge Worker (`web/_worker.js`) transparently proxies `https://dev.credence.run/docs/` and `/blog/` directly to `https://dev.credence-docs.pages.dev/` with zero-cache headers (`Cache-Control: no-cache, no-store, must-revalidate`).
+4. **Shared Assets Routing & Fallback**:
+   - Requests for `/assets/*` in `_worker.js` MUST bypass hostname domain prefixing (e.g. `reqPath.startsWith('/assets/')`) to prevent stylesheets and shared scripts from 404ing on custom apex subdomains.
+   - Workers should fall back to the root `reqPath` if a domain-prefixed path returns 404.
+5. **Bi-Directional Link Confinement**:
+   - Workstation (`credence-workstation.js`) and documentation router (`app.js`) MUST dynamically normalize cross-station hyperlinks (`transformTargetUrl` / click listeners) to keep reviewers within `dev.*` subdomains during staging reviews.
+

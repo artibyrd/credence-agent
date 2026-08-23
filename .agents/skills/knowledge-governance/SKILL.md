@@ -291,5 +291,29 @@ GitHub branch protection enforces `require_code_owner_reviews: true` on `main`, 
 - `just sync-version` $\to$ Validates changelog release headers before tagging.
 - `just release` $\to$ Prompts to watch production deployment and trigger `/learn` for continuous improvement.
 
+---
+
+## 12. Staged Semantic Versioning & Edge Subpath Proxy Invariants
+
+### 1. Staged Semantic Version Sync Before PR Creation
+- Feature branches must synchronize semantic versions across all 7 manifests (`just sync-version <version>`) **prior** to opening pull requests (`just pr create`).
+- This guarantees that automated Dev deployments (`deploy-dev.yml`) and Cloudflare Preview builds display the authoritative milestone version for human review.
+
+### 2. Multi-Domain Edge Proxy Subpath Preservation
+- When proxying dedicated subdomains (`docs.credence.run`, `blog.credence.run`) to static asset buckets (Cloudflare Pages), the edge router (`_worker.js`) must preserve full directory paths (e.g. `/docs/intro.md`, `/blog/essay.md`) without prefix stripping.
+- Path stripping is strictly limited to path-prefixed routes on the primary dev hostname (e.g. `dev.credence.run/docs/`).
+
+### 3. Fail-Closed Client Markdown Fetch Validation
+- Client-side document engines (`app.js`) must validate incoming text before parsing:
+
+```javascript
+if (md.trim().startsWith('<!DOCTYPE html>') || md.trim().startsWith('<html') || md.trim().startsWith('<head')) {
+  throw new Error(`Invalid markdown response: received HTML payload for ${target.path}`);
+}
+```
+
+This prevents SPA 404 fallback HTML documents from ever rendering nested navbars into content bodies.
+
+
 
 

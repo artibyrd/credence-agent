@@ -101,3 +101,31 @@ Use this skill when refactoring, modularizing, or auditing source files, Justfil
   - Hardcoded sparkline trajectories (e.g. `+2.4 pts (Improving)`).
   - Dummy scores or synthetic consensus badges.
 
+---
+
+## 6. Scoped Workstation CSS & Viewport Isolation
+
+To prevent compact workstation layout locks from freezing natural document scrolling on landing pages (`credence.run`), blogs (`blog.credence.run`), and documentation (`docs.credence.run`):
+
+1. **Mandatory `:has()` Container Scoping**:
+   - `height: 100vh; overflow: hidden;` must NEVER be applied unconditionally to global `html, body`.
+   - Always scope desktop workstation layout to container presence:
+
+```css
+@media (min-width: 921px) {
+  html:has(.workstation-container),
+  body:has(.workstation-container) {
+    height: 100vh;
+    overflow: hidden;
+  }
+  body:has(.workstation-container) {
+    display: flex;
+    flex-direction: column;
+  }
+}
+```
+
+2. **Landing & Documentation Page Freedom**:
+   - All document, marketing, and reading surfaces must retain unconstrained natural scrolling (`overflow: auto`, natural document height).
+
+

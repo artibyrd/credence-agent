@@ -83,3 +83,14 @@ poetry run pytest tests/test_docs_integrity.py -k "lifecycle or invariant or par
 
 ### 4. The Cart-Before-the-Horse Order-of-Operations Check
 - Verify that every proposed implementation plan is topologically sorted: scrubbers & schemas precede APIs, APIs precede UIs/CLI, and empirical tests precede case study essays.
+
+---
+
+## 4. Hermetic Pipeline Test Assertion Boundaries
+
+When writing or modifying unit tests (`@pytest.mark.unit`) that execute pipeline evaluation (`evaluate_snapshot`):
+- **Hermetic Boundary Principle**: CI runners operate offline without cloud LLM keys, triggering `evaluation_method: "offline_structural_heuristic"`.
+- **Classification Range**: Tests evaluating profile overrides must assert against the full hermetic spectrum:
+  `assert report.classification in ("LOW_SUSPICION", "SUSPICIOUS", "DECEPTIVE")`
+- **Zero Mock Data Invariant**: Never mock LLM responses in unit tests unless explicitly tagged with `@pytest.mark.mock`. Real heuristic code paths must execute cleanly offline.
+

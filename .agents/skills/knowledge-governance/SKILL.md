@@ -115,6 +115,14 @@ flowchart LR
 - Push feature branch (`release/vX.Y.0` or `feat/...`) and create PRs across all ecosystem repositories.
 - Monitor automated Dev deployment to Google Cloud Run (`deploy-dev.yml` / `gh run watch`).
 - Probe live Dev endpoints (`https://credence-dev-wukzqiyqbq-uc.a.run.app/health`, `/api/v1/mesh/status`) to confirm operational readiness.
+
+#### Mk1 Review Walkthrough Readiness Checklist
+Before presenting `walkthrough.md` for human Mk1 Eyeball review, the agent must strictly verify:
+1. [x] **Local QA Gauntlet**: `just check` passed cleanly (100% test pass rate, 0 mypy/ruff errors, token budget <800).
+2. [x] **Feature Branching**: Work is committed and pushed on a feature branch (`feat/<slug>` or `release/vX.Y.Z`).
+3. [x] **Staged PR Triad**: Pull requests are open across `credence`, `credence-docs`, and `credence-agent`.
+4. [x] **CI/CD Health**: Automated CI and `deploy-dev.yml` workflows have completed successfully (`✓`) on GitHub Actions.
+5. [x] **Live Dev Probing**: Cloud Run Dev endpoints (`/health`, `/api/health`, `/api/mesh/network-health`, `/api/cost/telemetry`) and Cloudflare Pages dev preview are probed and verified live.
 - Compile `walkthrough.md` with:
   1. Direct markdown links to all opened Pull Requests.
   2. Live Dev Environment Interactive Verification Matrix linking specific endpoints and expected telemetry.

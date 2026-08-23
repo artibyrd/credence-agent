@@ -48,6 +48,16 @@ Use this skill when refactoring, modularizing, or auditing source files, Justfil
   - `just sync-version` $\to$ Verifies `docs/changelog.md` contains release header
   - `just release` $\to$ Prompts to watch production deployment and run `/learn`
 
+### 3. Conventional PR Title & Scope Taxonomy
+- **Strict Scope Taxonomy**: The CI gate strictly enforces conventional PR scopes. Scopes MUST strictly be one of:
+  - `(governance)`: Invariant audits, skill updates, knowledge governance, policies.
+  - `(forensics)`: Evidence extraction, DOM hashing, scrubber heuristics, parser guards.
+  - `(mesh)`: P2P gossip, Watts-Strogatz clustering, consensus aggregation, Sybil defense.
+  - `(crypto)`: Ed25519 signatures, RFC 8785 canonical JSON, node identity envelopes.
+  - `(ui)`: Web workstations, CSS styling, components, TUI, CLI formatting.
+  - `(ops)`: CI/CD workflows, Terraform, Cloud Run deployments, Dockerfiles, Justfiles.
+- **PR Title Format**: `[vX.Y.Z] <type>(<scope>): <imperative summary>` (e.g. `[v2.10.0] feat(governance): add weighted median consensus`).
+
 ---
 
 ## 3. Epistemic Anti-Spoofing & Grounded Embed Governance

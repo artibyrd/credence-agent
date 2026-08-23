@@ -170,13 +170,26 @@ To prevent compact workstation layout locks from freezing natural document scrol
 
 ---
 
-## 10. Interactive Diagram Readability & Vertical Ergonomics
+## 10. Architectural Technical Schematics & Figcaption Invariant
 
-### 1. Vertical Hierarchy over Horizontal Spread
-- Flowcharts embedded in narrow reading columns must use vertical flow (`flowchart TD`, `direction TB`) and multi-line labels (`<br/>`) rather than wide horizontal subgraphs (`flowchart LR`) to prevent SVG coordinate shrinkage.
+### 1. Genuine Technical Schematics (Prohibition of "Text in Boxes with Arrows")
+- **Structural Modeling**: Technical illustrations must model concrete architectural mechanics: multi-stage data pipelines, state transition machines, decentralized P2P network topologies, closed entity feedback loops, or branching decision trees.
+- **Prohibition of Generic Text Cards**: Never dump bullet points from article text into generic card templates with connecting arrows. If a visual does not convey structural relationships, flows, or state transitions beyond plain text, it is visual clutter.
+- **Prohibition of Decorative Pills & Line Text**: Ban decorative pill badges and text placed directly on top of connecting arrow lines to prevent visual collision and unreadable overlaps.
 
-### 2. Interactive Pan-Zoom Toolbar & Fullscreen Lightbox Modal
-- Diagram rendering engines must provide interactive window controls (`0.75x` to `3.0x` zoom, pan-to-scroll) and a native `<dialog>` lightbox modal with WCAG 2.1 AA/AAA dark slate palette (`#1e293b` fills, `#38bdf8` borders).
+### 2. Visible Descriptive Figcaptions Below Every Diagram
+- **Context-Specific Alt Text**: Every diagram must declare an explicit, descriptive alt text explaining *what the diagram illustrates* (e.g. `Figure 1.1: Circular conflict feedback loop between municipal governance and newsroom monopoly, and Credence forensic audit layer`).
+- **Prohibition of Title Duplication**: Alt text must never repeat the article title, section header, or generic placeholder copy.
+- **Visible Display**: The documentation markdown parser (`app.js`) wraps illustrations in `<figure class="doc-illustration">` with a high-contrast `<figcaption>` directly below each graphic, ensuring immediate human reviewability of intended vs depicted mechanics.
+- **Shift-Left Automated Integrity Gate**: Enforced in Tier 2 via `test_doc_illustrations_require_descriptive_figcaptions` in `tests/governance/test_docs_integrity.py`.
+
+### 3. Curated Placement & Decorative Pruning
+- **High-Value Placement**: Position diagrams directly within the subsection that explains the technical concept, rather than defaulting to top-of-article decorative banners.
+- **Reference Cleanliness**: Pure reference manuals, CLI argument tables, changelogs, topic indices, and sitemaps must remain clean, legible text without forced decorative illustrations.
+
+### 4. Post-Reduction "Wall of Text" Narrative Visual Audit
+- **Density Auditing**: Following architectural reductions, audit narrative-heavy blog essays and philosophical treatises for "wall of text" reading fatigue.
+- **Targeted High-Fidelity Conceptual Visuals**: Where visual breathing room is needed but a formal architectural schematic is not suitable, generate targeted, high-fidelity conceptual illustrations that capture the specific investigative or philosophical premise with zero generic filler.
 
 
 

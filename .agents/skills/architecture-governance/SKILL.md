@@ -42,14 +42,14 @@ Use this skill when refactoring, modularizing, or auditing source files, Justfil
 ### 2. Workflow State Chaining
 - Toolchain commands must be chained so each successful step points directly to the next phase:
   - `implementation_plan.md` $\to$ Declares target semantic version (`vX.Y.Z`)
-  - `just check` $\to$ Verifies pre-commit QA gates
+  - `just check` $\to$ Verifies parallel pre-commit QA gates (<3s)
   - `just sync-version <version>` $\to$ Synchronizes all 7 version manifests prior to PR staging
-  - `just pr create '<title>'` $\to$ Creates staged PR triad with `[vX.Y.Z]` title prefix
-  - `gh run watch` $\to$ Monitors `deploy-dev.yml` deploying container reporting `vX.Y.Z`
-  - Live Dev Probing $\to$ Verifies `/health` reports `vX.Y.Z` before Mk1 review
+  - `just pr-create '<title>'` $\to$ Creates staged PR triad with `[vX.Y.Z]` title prefix
+  - `just ci-watch` $\to$ Monitors `deploy-dev.yml` deploying container reporting `vX.Y.Z`
+  - `just cloud-probe` $\to$ Verifies `/health` reports `vX.Y.Z` before Mk1 review
   - Mk1 Eyeball Review $\to$ Human sign-off on PRs and live Dev endpoints
-  - `just pr merge` $\to$ Merges PR triad into `main`
-  - `just release <version>` $\to$ Tags and releases on production
+  - `just pr-merge` $\to$ Merges PR triad into `main`
+  - `just release <version> <msg>` $\to$ Tags and releases on production
 
 ### 3. Conventional PR Title & Scope Taxonomy
 - **Strict Scope Taxonomy**: The CI gate strictly enforces conventional PR scopes. Scopes MUST strictly be one of:
@@ -193,6 +193,23 @@ To prevent compact workstation layout locks from freezing natural document scrol
 ### 4. Post-Reduction "Wall of Text" Narrative Visual Audit
 - **Density Auditing**: Following architectural reductions, audit narrative-heavy blog essays and philosophical treatises for "wall of text" reading fatigue.
 - **Targeted High-Fidelity Conceptual Visuals**: Where visual breathing room is needed but a formal architectural schematic is not suitable, generate targeted, high-fidelity conceptual illustrations that capture the specific investigative or philosophical premise with zero generic filler.
+
+---
+
+## 11. Justfile Modularization, Recipe Groups & Approval Bootstrapping
+
+### 1. Modular Subfile Architecture (<300 LOC per file)
+- The Justfile suite must be partitioned into decoupled submodules under `just/` (`preflight.just`, `quality.just`, `engine.just`, `vcs.just`, `cloud.just`, `release.just`).
+- Root `Justfile` acts solely as an orchestrator with modern settings (`set shell := ["bash", "-c"]`, `set dotenv-load := true`) and modular imports.
+
+### 2. Discrete Safe vs. Gated Decoupling
+- **No Parameterization Bleed**: Never combine read-only inspection with mutating actions inside parameterized recipes.
+- **Safe Commands**: Must be isolated into distinct recipes (`status`, `git-diff`, `pr-status`, `cloud-status`, `edge-status`) assigned to safe recipe groups (`[group('vcs: safe')]`, `[group('hosted: safe')]`).
+- **Gated Commands**: Mutating operations (`branch`, `commit`, `pr-create`, `pr-merge`, `cloud-deploy-prod`, `release`) must be assigned to gated recipe groups (`[group('vcs: gated')]`, `[group('hosted: gated')]`) with native `[confirm('...')]` safety gates.
+
+### 3. Approval Bootstrapping Runner
+- Maintain `scripts/bootstrap_approvals.py` (`just bootstrap-approvals`) to walk through all primary safe command shapes sequentially, enabling developers in fresh workspaces to prime their IDE approval cache with "Always Allow" in a single pass.
+
 
 
 

@@ -325,9 +325,11 @@ GitHub branch protection enforces `require_code_owner_reviews: true` on `main`, 
 
 ## 12. Staged Semantic Versioning & Edge Subpath Proxy Invariants
 
-### 1. Staged Semantic Version Sync Before Dev Staging & PR Creation
-- Feature branches must synchronize semantic versions across all 7 manifests (`just sync-version <version>`) **prior** to opening pull requests (`just pr create`) and deploying to Dev (`deploy-dev.yml`).
-- This guarantees that automated Dev deployments (`deploy-dev.yml`), `/health` endpoints, and Cloudflare Preview builds display the authoritative target milestone version for human review rather than conflating new changes with previous releases.
+### 1. Mandatory Pre-Staging Version Sync & Implementation Plan Invariant
+- **Implementation Plan Mandate**: Every `implementation_plan.md` MUST explicitly declare the target semantic release version (e.g. `Target Semantic Version: v2.12.1 (Patch)` or `v2.13.0 (Minor)`).
+- **Pre-Staging Synchronization**: Feature branches must synchronize semantic versions across all 7 manifests (`just sync-version <target-version>`) and add the corresponding `docs/changelog.md` release entry (`## [X.Y.Z] - YYYY-MM-DD`) **prior** to opening pull requests (`just pr create`) and deploying to Dev (`deploy-dev.yml`).
+- **Anti-Masquerading Invariant**: Never push a feature branch to GitHub without synchronizing the target version. Unsynced deployments cause `deploy-dev.yml` to build container images reporting stale version numbers in `/health` telemetry, masquerading new code under old tags.
+- **PR Title Prefix**: All companion PR titles and commits must carry the target version prefix `[vX.Y.Z] <type>(<scope>): <summary>`.
 
 ### 2. Multi-Domain Edge Proxy Subpath Preservation
 - When proxying dedicated subdomains (`docs.credence.run`, `blog.credence.run`) to static asset buckets (Cloudflare Pages), the edge router (`_worker.js`) must preserve full directory paths (e.g. `/docs/intro.md`, `/blog/essay.md`) without prefix stripping.

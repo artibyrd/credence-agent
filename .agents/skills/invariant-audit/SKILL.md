@@ -48,7 +48,7 @@ This skill enforces the **3-Tier Invariant Scalability Architecture** across fiv
 - Verifies that all specialized skills have valid YAML frontmatter (`name`, `description`).
 - Validates that enclosed UTF-8 technical box schematics and wire sequences are used across all skills.
 
-### 5. 7-Manifest Semantic Version Parity Audit
+### 5. 7-Manifest Semantic Version Parity & Pre-Staging Sync Audit
 - Verifies simultaneous synchronization across all 7 version manifests:
   1. `credence/pyproject.toml`
   2. `credence/credence/__init__.py`
@@ -57,6 +57,8 @@ This skill enforces the **3-Tier Invariant Scalability Architecture** across fiv
   5. `credence-docs/docs/changelog.md`
   6. `credence/web/credence.run/index.html`
   7. `credence-agent/plugin.json`
+- **Pre-Staging Version Sync Audit**: Validates that active feature branches and open PRs declare their synchronized target version matching `pyproject.toml` prior to staging on Dev.
+- **Anti-Masquerading Invariant**: Prevents un-synced deployments from running on Google Cloud Run Dev reporting stale version numbers.
 
 ### 6. Prioritized Cognitive Taxonomy & Invariant Lifecycle Audit
 - Asserts that all 4 `AGENTS.md` files categorize Tier 0 invariants under the **Class α (Sovereign Safety)**, **Class β (Execution Topology)**, and **Class γ (Interface Symmetry)** headers.

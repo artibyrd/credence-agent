@@ -41,12 +41,15 @@ Use this skill when refactoring, modularizing, or auditing source files, Justfil
 
 ### 2. Workflow State Chaining
 - Toolchain commands must be chained so each successful step points directly to the next phase:
-  - `just check` $\to$ Prompts to run `just pr create '<title>'`
-  - `just pr create` $\to$ Prompts to watch `deploy-dev.yml` and probe live Dev links
-  - Mk1 Eyeball Review $\to$ Prompts to run `just pr merge`
-  - `just pr merge` $\to$ Prompts to switch to `main`, pull, and sync version
-  - `just sync-version` $\to$ Verifies `docs/changelog.md` contains release header
-  - `just release` $\to$ Prompts to watch production deployment and run `/learn`
+  - `implementation_plan.md` $\to$ Declares target semantic version (`vX.Y.Z`)
+  - `just check` $\to$ Verifies pre-commit QA gates
+  - `just sync-version <version>` $\to$ Synchronizes all 7 version manifests prior to PR staging
+  - `just pr create '<title>'` $\to$ Creates staged PR triad with `[vX.Y.Z]` title prefix
+  - `gh run watch` $\to$ Monitors `deploy-dev.yml` deploying container reporting `vX.Y.Z`
+  - Live Dev Probing $\to$ Verifies `/health` reports `vX.Y.Z` before Mk1 review
+  - Mk1 Eyeball Review $\to$ Human sign-off on PRs and live Dev endpoints
+  - `just pr merge` $\to$ Merges PR triad into `main`
+  - `just release <version>` $\to$ Tags and releases on production
 
 ### 3. Conventional PR Title & Scope Taxonomy
 - **Strict Scope Taxonomy**: The CI gate strictly enforces conventional PR scopes. Scopes MUST strictly be one of:

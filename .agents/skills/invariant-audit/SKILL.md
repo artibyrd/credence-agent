@@ -13,13 +13,19 @@ Use this skill when auditing, verifying, or refactoring the **Living Canon of Sy
 
 This skill enforces the **3-Tier Invariant Scalability Architecture** across five critical dimensions:
 
-```mermaid
-flowchart TD
-    Audit["invariant-audit Execution"] --> A1["1. Token Budget & Density (<800 tokens)"]
-    Audit --> A2["2. Dynamic Invariant Canon Naming ('The Invariant Bible')"]
-    Audit --> A3["3. 4-Phase Release & Learning Lifecycle"]
-    Audit --> A4["4. Tier 1 Progressive Disclosure Compliance"]
-    Audit --> A5["5. 7-Manifest Semantic Version Parity"]
+```text
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                             INVARIANT AUDIT EXECUTION ENGINE                                     │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                 [just audit-invariants]                                          │
+│                                            │                                                     │
+│      ┌─────────────────────┬───────────────┴───────────────┬─────────────────────┐               │
+│      ▼                     ▼                               ▼                     ▼               │
+│ ┌──────────────────┐ ┌──────────────────┐             ┌──────────────────┐ ┌──────────────────┐  │
+│ │ 1. Token Budget  │ │ 2. Dynamic Canon │             │ 3. 4-Phase       │ │ 4. 7-Manifest    │  │
+│ │    (<800 tokens) │ │    Bible Naming  │             │    Lifecycle     │ │    Parity        │  │
+│ └──────────────────┘ └──────────────────┘             └──────────────────┘ └──────────────────┘  │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### 1. Token Budget & Context Economy Audit
@@ -40,7 +46,7 @@ flowchart TD
 ### 4. Progressive Disclosure & Skills Audit
 - Audits `.agents/skills.json` and `.agents/skills/` directory structure.
 - Verifies that all specialized skills have valid YAML frontmatter (`name`, `description`).
-- Validates that high-contrast dark slate Mermaid styling is applied across all skill diagrams.
+- Validates that enclosed UTF-8 technical box schematics and wire sequences are used across all skills.
 
 ### 5. 7-Manifest Semantic Version Parity Audit
 - Verifies simultaneous synchronization across all 7 version manifests:

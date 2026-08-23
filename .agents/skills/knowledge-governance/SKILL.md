@@ -13,14 +13,23 @@ Use this skill when processing `/learn` proposals, post-mortems, or new operatio
 
 When synthesizing new insights, evaluate each finding against this scalability matrix to prevent context bloat and attention dilution:
 
-```mermaid
-flowchart TD
-    Insight["New Insight / Finding / Invariant"] --> Route{"Knowledge Placement Router"}
-    
-    Route -->|"Universal P0 Non-Negotiable Constraint?"| Tier0["Tier 0: AGENTS.md / Core Rules<br/>(Always-on, &lt;800 tokens, P0 Safety &amp; Grounding)"]
-    Route -->|"Subsystem-Scoped Rule or Vendor Playbook?"| Tier1["Tier 1: Progressive Skill (.agents/skills/)<br/>(Loaded on-demand, e.g. cloudrun-ops, mesh-cluster)"]
-    Route -->|"Deterministic Syntax / Format / Parity Check?"| Tier2["Tier 2: Shift-Left Automated Test Gate<br/>(test_docs_integrity.py, preflight, Justfile)"]
-    Route -->|"Mathematical Proof, Schema, or Spec?"| Tier3["Tier 3: docs/ & Specifications<br/>(docs/invariants.md reference documentation)"]
+```text
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                   3-TIER INVARIANT SCALABILITY & KNOWLEDGE PLACEMENT ROUTER                      │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                               [New Finding / Invariant / Insight]                                │
+│                                                │                                                 │
+│                                                ▼                                                 │
+│                                 [Knowledge Placement Router]                                     │
+│                                                │                                                 │
+│   ┌──────────────────────┬─────────────────────┼──────────────────────┬──────────────────────┐   │
+│   ▼                      ▼                     ▼                      ▼                      │   │
+│ ┌──────────────────────┐ ┌───────────────────┐ ┌────────────────────┐ ┌────────────────────┐ │   │
+│ │ Tier 0: AGENTS.md    │ │ Tier 1: Skill     │ │ Tier 2: Test Gate  │ │ Tier 3: Specs      │ │   │
+│ │ (Always-on, <800 tok,│ │ (.agents/skills/, │ │ (test_docs_        │ │ (docs/invariants.md│ │   │
+│ │  P0 Core Invariants) │ │  On-demand guides)│ │  integrity.py)     │ │  Reference manual) │ │   │
+│ └──────────────────────┘ └───────────────────┘ └────────────────────┘ └────────────────────┘ │   │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Tier 0: Universal Core Invariants (`AGENTS.md`)
@@ -43,19 +52,14 @@ flowchart TD
 ### Tier 2: Shift-Left Automated Integrity Test Gates (`tests/test_docs_integrity.py` & `Justfile`)
 - **Loading Mode**: Execution Time (`just check` runs in <0.3s).
 - **Best For**:
-  - Mechanical constraints that do not require LLM system prompt memory:
-    - Markdown YAML frontmatter validation (`test_all_markdown_files_valid_frontmatter`).
-    - Markdown code fence column-0 and syntax validation (`test_all_markdown_code_fences_and_syntax`).
-    - Zero-npm assertion (`test_zero_npm_invariant`).
-    - 7-Manifest version parity across repos (`test_ecosystem_version_parity`).
-    - Sitemap route coverage & deep link validation.
-    - Mermaid WCAG contrast validation.
+  - Semantic version parity across manifests (`test_ecosystem_version_parity`).
+  - Code fence column-0 alignment (`test_all_markdown_code_fences_and_syntax`).
+  - Frontmatter and title presence (`test_all_markdown_files_valid_frontmatter`).
+  - Sitemap route validation (`test_sitemap_integrity_and_route_coverage`).
 
-### Tier 3: Architectural Specifications & Deep Docs (`docs/`)
-- **Loading Mode**: Manual Reference (viewed via `view_file` or static web).
-- **Best For**:
-  - The Invariant Bible, mathematical formulas, proofs, and entropy thresholds (e.g. `docs/agent-invariants.md`).
-  - Schema.org JSON-LD contracts, API specifications, and whitepapers.
+### Tier 3: Canonical Reference Manuals & Architecture Blueprints (`docs/`)
+- **Loading Mode**: Reference / Human Browsing (`docs.credence.run`).
+- **Best For**: Complete mathematical proofs, protocol sequence diagrams, and exhaustive API references.
 
 ---
 
@@ -63,19 +67,17 @@ flowchart TD
 
 Invariants are not immutable dogmas; they represent the **strongest validated empirical truth at project epoch $t$**. Over time, invariants must be continuously re-evaluated for ongoing merit.
 
-```mermaid
-stateDiagram-v2
-    [*] --> Proposed: /learn Retrospective / Discovery
-    Proposed --> Active: Minted into Living Canon (vX.Y.0)
-    Active --> UnderReview: Milestone Audit (v2.X.0)
-    
-    UnderReview --> Active: Re-affirmed (Merit Holds)
-    UnderReview --> Amended: Scope Refined / Upgraded
-    UnderReview --> Demoted: Promoted to Automated Gate (Tier 2) or Skill (Tier 1)
-    UnderReview --> Retired: Obsolete (Constraint No Longer Exists)
-    
-    Demoted --> [*]
-    Retired --> [*]
+```text
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                             INVARIANT LIFECYCLE STATE MACHINE                                    │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│    Proposed ─────────► Active (Minted vX.Y.0) ─────────► Under Review (Milestone Audit)          │
+│       ▲                                                              │                           │
+│       │                                      ┌───────────────────────┼──────────────────────┐    │
+│  [/learn Run]                                ▼                       ▼                      ▼    │
+│                                        Active (Affirmed)      Amended (Refined)      Demoted /   │
+│                                                                                      Retired     │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### The Invariant Lifecycle State Machine
@@ -101,13 +103,22 @@ stateDiagram-v2
 
 Ecosystem development and knowledge synthesis strictly follow a 4-phase sequential progression:
 
-```mermaid
-flowchart LR
-    Phase1["1. Code & Local QA<br/><i>(just check, tests, linters)</i>"] --> Phase2["2. PR Staging & Dev Probing<br/><i>(deploy-dev.yml, Live Dev Links)</i>"]
-    Phase2 --> Phase3["3. Mk1 Eyeball Review<br/><i>(PR Links + Live Dev Verification)</i>"]
-    Phase3 --> Phase4["4. Feature Release<br/><i>(just pr merge, tag vX.Y.0, Prod Deploy)</i>"]
-    Phase4 --> Phase5["5. /learn Retrospective<br/><i>(learning_proposal.md)</i>"]
-    Phase5 --> Phase6["6. Lean Patch Release<br/><i>(Apply Invariants, Tag vX.Y.1)</i>"]
+```text
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                        4-PHASE DELIVERY & LEAN LEARNING LIFECYCLE                                │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐      │
+│ │ 1. Code & Local │ ──► │ 2. PR Staging & │ ──► │ 3. Mk1 Eyeball  │ ──► │ 4. Feature      │      │
+│ │    QA Gauntlet  │     │    Dev Probing  │     │    Sign-Off     │     │    Release      │      │
+│ └─────────────────┘     └─────────────────┘     └─────────────────┘     └────────┬────────┘      │
+│                                                                                  │               │
+│                                                 ┌────────────────────────────────┘               │
+│                                                 ▼                                                │
+│                         ┌─────────────────┐     ┌─────────────────┐                              │
+│                         │ 6. Lean Patch   │ ◄── │ 5. /learn Retro-│                              │
+│                         │    Release      │     │    spective     │                              │
+│                         └─────────────────┘     └─────────────────┘                              │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Phase 1: Code, Local QA, PR Creation & Dev Deployment Probing
@@ -123,6 +134,8 @@ Before presenting `walkthrough.md` for human Mk1 Eyeball review, the agent must 
 3. [x] **Staged PR Triad**: Pull requests are open across `credence`, `credence-docs`, and `credence-agent`.
 4. [x] **CI/CD Health**: Automated CI and `deploy-dev.yml` workflows have completed successfully (`✓`) on GitHub Actions.
 5. [x] **Live Dev Probing**: Cloud Run Dev endpoints (`/health`, `/api/health`, `/api/mesh/network-health`, `/api/cost/telemetry`) and Cloudflare Pages dev preview are probed and verified live.
+6. [x] **Version Synchronized**: Ecosystem target version is synchronized across all 7 manifests prior to deployment.
+7. [x] **Walkthrough PR Links**: `walkthrough.md` contains exact GitHub PR links for human Mk1 review.
 - Compile `walkthrough.md` with:
   1. Direct markdown links to all opened Pull Requests.
   2. Live Dev Environment Interactive Verification Matrix linking specific endpoints and expected telemetry.
@@ -238,13 +251,22 @@ When capturing new session learnings or architectural improvements:
 The Invariant Challenger (`scripts/challenge_invariant.py`) provides automated epistemic scrutiny of any living invariant to determine if it should remain active in Tier 0 prompt context, be demoted to Tier 2 automated test gates, amended, or nullified.
 
 ### The 4 Challenger Dispositions
-```mermaid
-flowchart TD
-    Run["just challenge-invariant <slug>"] --> Evaluate{"Challenger Evaluation"}
-    Evaluate -->|"Cognitive Reasoning / Human Authority Required"| P["1. PRESERVE (Tier 0 Active)"]
-    Evaluate -->|"100% Test Saturated (Mechanical Verification)"| D["2. DEMOTE (Graduate to Tier 2 Test Gate)"]
-    Evaluate -->|"Ecosystem Shift / Refinement Needed"| A["3. AMEND (Sharpen Invariant Scope)"]
-    Evaluate -->|"Technology Obsoleted / Constraint Invalidated"| N["4. NULLIFY / RETIRE (Archive in Invariant Bible)"]
+```text
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                         INVARIANT CHALLENGER DISPOSITION MATRIX                                  │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                 [just challenge-invariant <slug>]                                │
+│                                                │                                                 │
+│                                                ▼                                                 │
+│                                   [Challenger Evaluation Engine]                                 │
+│                                                │                                                 │
+│         ┌───────────────────┬──────────────────┴───────────────────┬───────────────────┐         │
+│         ▼                   ▼                                      ▼                   ▼         │
+│ ┌───────────────┐   ┌───────────────┐                      ┌───────────────┐   ┌───────────────┐ │
+│ │ 1. PRESERVE   │   │  2. DEMOTE    │                      │  3. AMEND     │   │ 4. NULLIFY    │ │
+│ │ (Cognitive/P0)│   │ (Mechanical)  │                      │ (Refine Scope)│   │  (Obsoleted)  │ │
+│ └───────────────┘   └───────────────┘                      └───────────────┘   └───────────────┘ │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 1. **`PRESERVE`**: Invariants requiring subjective cognitive evaluation, human custody, safety boundaries, or complex architectural reasoning remain active in `AGENTS.md` (Tier 0).

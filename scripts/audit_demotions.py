@@ -83,8 +83,7 @@ def evaluate_demotion_candidates(
         (r"7-Manifest", "test_ecosystem_version_parity", "Asserts version synchronization across all 7 manifests"),
         (r"Code Fence", "test_all_markdown_code_fences_and_syntax", "Asserts column-0 code fence indentation"),
         (r"YAML Frontmatter", "test_all_markdown_files_valid_frontmatter", "Asserts title and description YAML frontmatter"),
-        (r"Sitemap", "test_sitemap_integrity_and_route_coverage", "Asserts 100% sitemap route coverage"),
-        (r"Mermaid", "test_mermaid_diagram_syntax_integrity", "Asserts high-contrast dark slate styling"),
+        (r"Schematic|Diagram", "test_schematic_box_diagram_integrity", "Asserts enclosed UTF-8 box boundaries and line limits"),
         (r"Hermetic Unit Test Marker", "test_hermetic_unit_test_markers_invariant", "Asserts zero browser scraping in unit tests"),
     ]
 

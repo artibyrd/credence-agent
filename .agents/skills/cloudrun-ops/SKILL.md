@@ -300,3 +300,19 @@ When deploying decoupled edge routing between Production and Dev environments on
 5. **Bi-Directional Link Confinement**:
    - Workstation (`credence-workstation.js`) and documentation router (`app.js`) MUST dynamically normalize cross-station hyperlinks (`transformTargetUrl` / click listeners) to keep reviewers within `dev.*` subdomains during staging reviews.
 
+---
+
+## 13. Cross-Repo Edge Deployment & Secret Topology
+
+When operating across decoupled ecosystem repositories (`credence`, `credence-docs`, `credence-agent`):
+
+1. **Cloudflare Secret Centralization**:
+   - `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` are centralized exclusively in the primary `credence` repository.
+   - Pushing isolated commits to `credence-docs` runs a workflow that skips Cloudflare deployment. Full edge preview deployments must be dispatched via the `credence` repository workflow:
+     `gh workflow run "Deploy Dev Environment to Google Cloud Run" --ref <branch>`
+2. **Edge API Network Resilience**:
+   - When querying or purging Cloudflare zone caches via curl in GitHub Actions, always use `--retry 3 --retry-delay 2` and default fallback outputs (`|| echo "{}"` / `|| true`) to prevent transient exit code 56 connection resets from breaking releases.
+3. **Decoupled Docs & Blog Domain Routing**:
+   - `docs.credence.run` and `blog.credence.run` are proxied to Cloudflare Pages via `web/_worker.js`.
+   - `app.js` enforces subdomain routing separation: `docs.credence.run` routes technical reference, and `blog.credence.run` routes sovereign essays, bouncing across subdomains dynamically when cross-plane links are activated.
+

@@ -213,6 +213,20 @@ To prevent compact workstation layout locks from freezing natural document scrol
 ### 3. Approval Bootstrapping Runner
 - Maintain `scripts/bootstrap_approvals.py` (`just bootstrap-approvals`) to walk through all primary safe command shapes sequentially, enabling developers in fresh workspaces to prime their IDE approval cache with "Always Allow" in a single pass.
 
+---
+
+## 12. Minimal UI Navigation Labels & Anti-Overrun Ergonomics
+
+When designing compact navigation controls, plane switchers, and sidebar toggles:
+
+1. **Concise Punchy Labels**:
+   - In constrained header controls and multi-button groups, prefer minimal, clean text labels (e.g. `[ Docs | Blog ]`) over verbose descriptors (e.g. `[ ✍️ Sovereign Blog ]`).
+   - Long labels or excessive emojis risk container overflow and visual collision across mobile or compact desktop sidebars.
+2. **Context-Aware Subdomain Dispatch**:
+   - Navigation links across distinct functional properties must resolve to canonical subdomains (`docs.credence.run` vs `blog.credence.run`) rather than intra-domain hashes that conflate editorial and documentation planes.
+3. **Cache-Busted Static Asset References**:
+   - All static CSS and JS script tags must include `?v=${VERSION}` query parameters to ensure instant cache invalidation upon releases.
+
 
 
 

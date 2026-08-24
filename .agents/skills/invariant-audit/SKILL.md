@@ -71,10 +71,15 @@ This skill enforces the **3-Tier Invariant Scalability Architecture** across fiv
 - Audits newly proposed invariants for **Demotion Highway eligibility** (checking if the invariant can be verified deterministically via `test_docs_integrity.py` before adding to `AGENTS.md`).
 - Enforces upward axiomatic consolidation when total Tier 0 word/token budget approaches threshold.
 
-### 7. Permanent Semantic Slug Registry & Invariant Challenger
-- Asserts that all invariant references use canonical slugs (`inv-...`) across `AGENTS.md`, `.github/CODEOWNERS`, and documentation frontmatters (`invariants:`).
-- Runs automated epistemic scrutiny via `just challenge-invariant <slug>` to test necessity, test saturation, amendment, or nullification.
+### 8. Vector SVG Illustration & Anti-Box-Art Integrity Audit
+- **Zero ASCII Box Art Rule**: Prohibits both unicode box drawing (`┌`, `╔`) and ASCII boundary sequences (`+---+`, `+===+`). Code blocks and essays must use structured GitHub-Flavored Markdown tables, alerts, or vector SVGs.
+- **Vector SVG Integrity**: Requires dark-theme tokens (`#090d16`, `#050810`, `#1e293b`), explicit `viewBox`, descriptive non-generic figcaptions, and 100% SHA-256 checksum parity between `credence-docs` and `credence/web`.
 
+### 9. Decoupled Subdomain Routing & Cross-Plane Navigation Audit
+- **Domain Identity Separation**: Enforces strict domain partitioning:
+  - `docs.credence.run` hosts technical reference, quickstarts, tutorials, playgrounds, and invariants.
+  - `blog.credence.run` hosts sovereign essays, forensic investigations, and memoirs.
+- **Cross-Plane Navigation**: Plane switcher buttons, bridge cards, and relative hash links automatically navigate to the target subdomain (`getDocsBaseUrl()` vs `getBlogBaseUrl()`) while preserving single-host SPA behavior on local/preview environments.
 
 ---
 

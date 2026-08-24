@@ -349,7 +349,18 @@ This prevents SPA 404 fallback HTML documents from ever rendering nested navbars
 
 ---
 
-## 13. Multi-Line Markdown Callout & Blockquote Parser Invariant
+## 13. The Autonomous Lean Patch Release Execution Gate (`/learn` $\to$ `vX.Y.1`)
+
+- **Principle**: Continuous learning from `/learn` must never sit stranded in unreleased working trees or unversioned commits.
+- **Immediate Patch Mandate**: Once the user approves `learning_proposal.md` and the skill/rule updates are applied and verified:
+  1. Add `## [X.Y.1] - YYYY-MM-DD` release entry to `docs/changelog.md`.
+  2. Execute `just sync-version <X.Y.1>`.
+  3. Execute `just release <X.Y.1> "continuous learning skills update"`.
+- **Zero-Stall Invariant**: The agent must proactively and autonomously execute the patch release sequence to completion (sync $\to$ commit $\to$ tag $\to$ push $\to$ verify prod deploy), ensuring every learning cycle produces an immutable, signed, and deployed patch version without waiting for user reminders.
+
+---
+
+## 14. Multi-Line Markdown Callout & Blockquote Parser Invariant
 
 ### 1. Contiguous Block Slurping & Recursive AST Evaluation
 - **Cohesive Container Slurping**: Zero-build markdown state machines must slurp all contiguous blockquote lines (`> ...`), including empty blockquote spacing lines (`>` or `> `), into a unified container before parsing.
@@ -358,7 +369,7 @@ This prevents SPA 404 fallback HTML documents from ever rendering nested navbars
 
 ---
 
-## 14. Clean Session Brain Scratch Scripts & Approval Bootstrapping Invariant (`inv-clean-scratch-scripts`)
+## 15. Clean Session Brain Scratch Scripts & Approval Bootstrapping Invariant (`inv-clean-scratch-scripts`)
 
 ### 1. Mandatory Brain Scratch Storage Location
 - **Session History Preservation**: Ad-hoc scripts requiring user approval (`BypassSandbox: true`) must strictly be written to standalone files in the active session artifact brain directory (`<appDataDir>/brain/<conversation-id>/scratch/<name>.py`), never in repository root or workspace `/scratch/`.

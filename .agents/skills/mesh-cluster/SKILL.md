@@ -35,3 +35,9 @@ Use this skill when orchestrating, monitoring, or testing the decentralized P2P 
 - **Rendezvous Verification**: Verify that concurrent swarm nodes prioritize distinct feeds by asserting non-overlapping feed polling sequences across heterogeneous node pubkeys (`compute_feed_affinity(node_pubkey, feed_url)`).
 - **P2P Cross-Adoption**: Verify that newly audited articles in node bursts are gossiped via `MeshGossipRelay.broadcast_attestation` and adopted by peer nodes at $0.00 token cost via `check_mesh_effort_avoidance`.
 
+## Standards Governance Red-Team Testing (`test_mesh_rfc_redteam.py`)
+- **Quorum Consensus ($N=13$)**: Tests 13 honest nodes reaching $\ge 66.7\%$ Byzantine Quorum or $\ge 70.0\%$ Domain-Weighted Quorum.
+- **Byzantine Cartel Attack Defense**: Simulates 4 colluding Byzantine nodes ($f=4, 3f+1=13$) attempting to force-ratify malicious/overbroad rules. 9 honest nodes reject and protect Content-Addressed Storage ($30.77\% < 66.7\%$).
+- **Headroom Floor Circuit Breaker**: Nodes operating under quota pressure ($<40\%$ token headroom) reject shadow trial canaries with `QUOTA_PRESERVED`.
+- **Temporal Trajectory DAG Immutability**: Verifies that upgrading standards (e.g. `v1.0.0` $\to$ `v2.0.0`) preserves bit-for-bit cryptographic verification of historical receipts under original CAS digests.
+

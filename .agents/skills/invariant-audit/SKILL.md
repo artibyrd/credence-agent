@@ -81,6 +81,18 @@ This skill enforces the **3-Tier Invariant Scalability Architecture** across fiv
   - `blog.credence.run` hosts sovereign essays, forensic investigations, and memoirs.
 - **Cross-Plane Navigation**: Plane switcher buttons, bridge cards, and relative hash links automatically navigate to the target subdomain (`getDocsBaseUrl()` vs `getBlogBaseUrl()`) while preserving single-host SPA behavior on local/preview environments.
 
+### 10. Autonomous RFC Standards Governance & Golden FPR Audit
+- **3-Tier Hierarchy**: Asserts standards belong strictly to Tier 0 (`UNIVERSAL_GENERAL`), Tier 1 (`DOMAIN_SPECIALIST`), or Tier 2 (`SOVEREIGN_NICHE`).
+- **5-Stage State Machine**: Enforces automated promotion gates:
+  $$\text{Draft} \longrightarrow \text{Proposed} \longrightarrow \text{Candidate} \longrightarrow \text{Shadow Trial} \longrightarrow \text{Voting} \longrightarrow \text{Ratified}$$
+- **Synthetic Gauntlet & Golden Baseline**: All candidate catalogs must be evaluated against positive fixtures and the immutable Golden Control Corpus ($N=100$), asserting:
+  $$\mathcal{F}_1 \ge 0.87, \quad \text{Precision} \ge 0.90, \quad \text{Recall} \ge 0.85, \quad \text{FPR}_{\text{golden}} = 0.00\%, \quad G = 1.00$$
+- **CAS Pinning**: Ratified standards are pinned using RFC 8785 canonical JSON bytes and SHA-256 CAS hashes with dynamic hot-reload into `TaxonomyRegistry`.
+
+### 11. Zero-Mock Telemetry Boundary Audit (`inv-production-telemetry-boundary`)
+- **Real Node Reality**: Asserts that production operator dashboards (`credence.nexus`, `credence.report`, `admin.credence.run`, `credence.foundation`) never fall back to fake simulated datasets (`getDemoData()`, zeroed hashes, fake `setTimeout`).
+- **Genesis State**: Fresh, unpeered nodes report authentic `STANDALONE (UNPEERED)` status ($N=1, f=0$) with authentic receipts or an explicit disconnected state.
+
 ---
 
 ## 2. Turnkey Audit Execution Commands

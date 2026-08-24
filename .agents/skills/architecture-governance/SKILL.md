@@ -34,6 +34,14 @@ Use this skill when refactoring, modularizing, or auditing source files, Justfil
 - Inter-module dependencies must flow strictly in a Directed Acyclic Graph (DAG) with zero circular imports.
 - Subpackage public APIs must be cleanly exposed via `__all__` lists in `__init__.py` or subpackage entrypoints.
 
+### 4. Zero-Mock Dashboard & Telemetry Invariant (`inv-production-telemetry-boundary`)
+- **Authentic State Reporting**: Operator dashboards must strictly report authentic daemon telemetry ($N \ge 1, f = \lfloor (N-1)/3 \rfloor$).
+- **No Simulation in Production**: Simulators and chaos tools belong exclusively in the interactive documentation playground (`docs/playground.md`); production surfaces must never contain demo dropdowns or mock generators.
+
+### 5. High-Density Tables & Anti-Box-Art Documentation Standard
+- **Documentation Assets**: In markdown documentation and cookbooks, use high-density Markdown tables or native vector SVG assets (`assets/illustrations/`).
+- **No ASCII / Box Art**: Do not use raw Mermaid blocks or UTF-8 / ASCII box drawing characters (`┌`, `╔`, `+---+`) inside markdown documentation files.
+
 ---
 
 ## 2. Shift-Left Intelligent Guidance & Workflow Chaining

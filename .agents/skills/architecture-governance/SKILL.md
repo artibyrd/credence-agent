@@ -38,9 +38,15 @@ Use this skill when refactoring, modularizing, or auditing source files, Justfil
 - **Authentic State Reporting**: Operator dashboards must strictly report authentic daemon telemetry ($N \ge 1, f = \lfloor (N-1)/3 \rfloor$).
 - **No Simulation in Production**: Simulators and chaos tools belong exclusively in the interactive documentation playground (`docs/playground.md`); production surfaces must never contain demo dropdowns or mock generators.
 
-### 5. High-Density Tables & Anti-Box-Art Documentation Standard
-- **Documentation Assets**: In markdown documentation and cookbooks, use high-density Markdown tables or native vector SVG assets (`assets/illustrations/`).
-- **No ASCII / Box Art**: Do not use raw Mermaid blocks or UTF-8 / ASCII box drawing characters (`┌`, `╔`, `+---+`) inside markdown documentation files.
+### 5. Vector SVG Illustration Architecture & Anti-Pseudo-Diagram Standard
+- **Never Degrade Diagrams to Raw Text**: When eliminating ASCII art, never downgrade architectural flows, pipelines, or topologies into loose text paragraphs or unformatted bullet points.
+- **Dedicated Vector SVG Assets**: Every system architecture, protocol sequence, or attack model must be implemented as a dedicated Vector SVG Illustration under `assets/illustrations/<slug>.svg`.
+- **Visual Design Tokens**:
+  - `viewBox="0 0 880 380"` (or `880 440` for multi-stage pipelines).
+  - Background: Dark gradient `#090d16` to `#050810` with subtle boundary stroke `rgba(56, 189, 248, 0.2)`.
+  - Cards: Drop-shadowed `#0f172a` cards with colored status headers and directional vector markers (`#38bdf8`, `#22c55e`, `#ef4444`).
+- **Markdown Figure Embedding**: Embed via standard markdown figure syntax `![Figure X.Y: Substantive Description](assets/illustrations/<slug>.svg)` which `app.js` mounts as `<figure class="doc-illustration"><img ... /><figcaption>...</figcaption></figure>`.
+- **Structured Markdown Tables**: Accompany every illustration with a structured GitHub-flavored Markdown table defining parameter lattices, operational stages, or component responsibilities.
 
 ---
 

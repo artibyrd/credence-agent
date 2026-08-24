@@ -47,17 +47,16 @@ The Antigravity IDE permission system intercepts **top-level tool invocations (`
 
 ---
 
-## 2. Bootstrapping Scopes
+## 2. The Prefix-Safe Command Boundary Law ("No Spicy Prefixes")
 
-The bootstrapping process is partitioned into two discrete scopes:
+The Antigravity permission system matches approved command shapes by **`binary subcommand` prefix**.
 
-1. **`core` Scope (Open-Source / Contributor / Fork-Safe)**:
-   * Verification of local developer toolchains, parallel QA gauntlets, in-memory unit tests, git status/diff/log inspection, and public documentation endpoints.
-   * Zero cloud provider access or GCP/Cloudflare authentication required.
-
-2. **`hosted` Scope (Artibyrd Maintainer Infrastructure)**:
-   * Google Cloud Run telemetry, environment-aware Dev/Prod probes, Cloudflare Edge router status, and live production health verification endpoints.
-   * Requires maintainer credentials.
+> [!CAUTION]
+> **The Spicy Command Boundary**:
+> Never include commands in the approval catalog whose prefix encompasses destructive or state-mutating subcommands.
+>
+> * **Prohibited (Spicy)**: `gcloud config ...` (Approving `gcloud config` would auto-authorize `gcloud config set ...`), `rm ...`, `git push --force`, `wrangler secret ...`.
+> * **Permitted (Safe)**: `just auth-check gcloud` (encapsulated in read-only Just recipe), `git status -s`, `grep -i <pattern> <file>`, `poetry run ruff check ...`.
 
 ---
 
@@ -94,6 +93,7 @@ git status -s
 git diff --stat
 git log -n 3 --oneline
 git branch --list
+git checkout AGENTS.md
 
 # 5. Everyday Python & Poetry Tooling (Outside Just)
 poetry version
@@ -101,13 +101,18 @@ poetry run ruff check credence
 poetry run mypy credence
 poetry run pytest tests/governance/test_docs_integrity.py -k test_zero_npm_invariant
 
-# 6. GitHub CLI Inspection (Outside Just)
+# 6. Everyday Coreutils & Text Search (Outside Just)
+grep -i "version" pyproject.toml
+head -n 5 pyproject.toml
+wc -l AGENTS.md
+
+# 7. GitHub CLI Inspection (Outside Just)
 gh auth status
 gh pr checks
 gh pr view
 gh run list --limit 5
 
-# 7. Public Web Endpoints
+# 8. Public Web Endpoints
 curl -sI https://docs.credence.run
 curl -sI https://raw.githubusercontent.com/artibyrd/credence/main/README.md
 ```

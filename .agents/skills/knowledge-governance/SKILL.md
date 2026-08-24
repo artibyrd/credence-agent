@@ -146,8 +146,9 @@ Before presenting `walkthrough.md` for human Mk1 Eyeball review, the agent must 
 - Pull `main`, create release tag `vX.Y.0` across all repositories (`just git-sync tag X.Y.0`), and push to GitHub (`just git-sync push`).
 - Monitor production deployment workflows (`deploy-backend.yml`, `Release`) via `gh run watch`.
 
-### Phase 3: `/learn` Retrospective
+### Phase 3: `/learn` Retrospective & Bootstrap Trajectory Harvest
 - Review session corrections, security requirements, and operational discoveries.
+- **Session Command Trajectory Harvest**: Audit `transcript.jsonl` tool calls from the current session. Identify recurring safe, read-only commands (e.g. `grep`, `head`, `wc`, selective `git checkout`) that triggered manual IDE approval dialogs, and catalog them into `scripts/bootstrap_approvals.py` and `bootstrap-approvals/SKILL.md` under the **Prefix-Safe Command Boundary Law**.
 - Classify new insights using the **4-Tier Knowledge Placement Architecture** (Tier 0 Universal Invariants, Tier 1 Progressive Skills, Tier 2 Shift-Left Tests, Tier 3 Documentation).
 - Draft and present `learning_proposal.md` for human review and explicit approval.
 

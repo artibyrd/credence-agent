@@ -14,7 +14,10 @@ Use this skill when refactoring, modularizing, or auditing source files, Justfil
 ### 1. 500 LOC Ceiling Law across Code & Toolchains
 - **Strict Hard Limit**: No individual source file (`.py`, `.js`, or `.just`) may exceed **500 Lines of Code (LOC)**.
 - **Decomposition Pattern**: Large modules must be decoupled into cohesive subpackages with focused responsibilities:
-  - **CLI**: Decomposed into `commands/`, `formatting/`, and lean root dispatcher `main.py` (<250 LOC).
+  - **CLI**: Decomposed into a 3-tier subpackage architecture (<350 LOC per file):
+    1. `helpers.py`: Programmatic helper functions and API adapters for test suites and library consumers (<200 LOC).
+    2. `dispatch.py`: Subcommand execution handler and async/sync routing dispatcher (<200 LOC).
+    3. `main.py`: Lean `build_parser()` argument tree and `main() -> dispatch_command(args)` entrypoint (<350 LOC).
   - **Server**: Decomposed into `lifespan.py`, `middleware/`, `mcp/`, `api/`, and lean Starlette application assembler `app.py` (<150 LOC).
   - **TUI**: Decomposed into `screens/`, `widgets/`, and lean app controller `app.py` (<250 LOC).
   - **Mesh**: Decomposed into `topology.py`, `badges.py`, `merit.py`, `stats.py`, and `models.py`.

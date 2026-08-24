@@ -52,15 +52,21 @@ This skill enforces the **3-Tier Invariant Scalability Architecture** across fiv
 - Verifies simultaneous synchronization across all 7 version manifests:
   1. `credence/pyproject.toml`
   2. `credence/credence/__init__.py`
-  3. `credence-docs/index.html`
-  4. `credence-docs/app.js`
-  5. `credence-docs/docs/changelog.md`
-  6. `credence/web/credence.run/index.html`
-  7. `credence-agent/plugin.json`
-- **Pre-Staging Version Sync Audit**: Validates that active feature branches and open PRs declare their synchronized target version matching `pyproject.toml` prior to staging on Dev.
-- **Anti-Masquerading Invariant**: Prevents un-synced deployments from running on Google Cloud Run Dev reporting stale version numbers.
+  3. `credence-docs/app.js`
+  4. `credence/web/assets/credence-workstation.js`
+  5. `credence-agent/plugin.json`
+  6. Multi-domain HTML badges across all 5 web workstations
+  7. Open Graph card assets (`og-card.svg` and `og-card.png`)
+- **Dynamic Self-Auditing & Attestation Engine**: `just sync-version <version>` automatically triggers `@poetry run credence audit-docs --update`, dynamically deriving `__version__` from package metadata and minting Ed25519 cryptographic signatures in `credence-docs/assets/attestations.json`.
 
-### 6. Prioritized Cognitive Taxonomy & Invariant Lifecycle Audit
+### 6. The 5 Shift-Left Automated Integrity Test Gates (`tests/governance/test_docs_integrity.py`)
+- **Gate 1 (`test_docs_attestation_and_manifest_version_parity`)**: Verifies 100% version synchronization and Ed25519 signature validity.
+- **Gate 2 (`test_all_registered_playgrounds_have_active_dom_mounts`)**: Verifies all registered playgrounds have DOM mount handlers.
+- **Gate 3 (`test_docs_cli_commands_and_flags_validity`)**: Statically verifies that all documented CLI subcommands exist in the parser.
+- **Gate 4 (`test_docs_justfile_recipes_exist`)**: Statically verifies that all documented `just` command invocations exist in Justfiles.
+- **Gate 5 (`test_zero_hardcoded_invariant_counts_in_docs`)**: Prohibits hardcoded invariant counts, enforcing "The Invariant Bible".
+
+### 7. Prioritized Cognitive Taxonomy & Invariant Lifecycle Audit
 - Asserts that all 4 `AGENTS.md` files categorize Tier 0 invariants under the **Class α (Sovereign Safety)**, **Class β (Execution Topology)**, and **Class γ (Interface Symmetry)** headers.
 - Audits newly proposed invariants for **Demotion Highway eligibility** (checking if the invariant can be verified deterministically via `test_docs_integrity.py` before adding to `AGENTS.md`).
 - Enforces upward axiomatic consolidation when total Tier 0 word/token budget approaches threshold.

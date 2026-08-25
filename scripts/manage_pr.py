@@ -130,6 +130,12 @@ def create_or_update_prs(title: str) -> None:
         tmp_body_file.write_text(body, encoding="utf-8")
         
         try:
+            # Ensure branch is pushed to origin
+            print(f"⬆️ Pushing branch {branch} for {repo_name}...")
+            push_code, push_out, push_err = run_cmd(["git", "push", "-u", "origin", branch], cwd=repo_path)
+            if push_code != 0:
+                print(f"⚠️ Push note for {repo_name}: {push_err or push_out}")
+
             # Check if PR exists
             code, out, _ = run_cmd(["gh", "pr", "view", "--json", "number,url"], cwd=repo_path)
             if code == 0:

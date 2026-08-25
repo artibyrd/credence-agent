@@ -385,15 +385,25 @@ This prevents SPA 404 fallback HTML documents from ever rendering nested navbars
 
 ---
 
-## 15. Clean Session Brain Scratch Scripts & Approval Bootstrapping Invariant (`inv-clean-scratch-scripts`)
+## 15. Clean Workspace Scratch Scripts, Provenance & Archival Invariant (`inv-clean-scratch-scripts`)
 
-### 1. Mandatory Brain Scratch Storage Location
-- **Session History Preservation**: Ad-hoc scripts requiring user approval (`BypassSandbox: true`) must strictly be written to standalone files in the active session artifact brain directory (`<appDataDir>/brain/<conversation-id>/scratch/<name>.py`), never in repository root or workspace `/scratch/`.
-- **Zero-Blob Standard**: Multi-line inline command blobs (`python -c "..."`) are prohibited for user approvals.
-- **Single-Approval Iteration**: Saving scripts as standalone files allows the human operator to grant "Always Allow" on `python3 <appDataDir>/brain/<conversation-id>/scratch/<name>.py`, enabling subsequent agent edits to the script without re-prompting.
+### 1. Curated Workspace Scratch Location & Provenance
+- **Curated Cross-Session Toolkit**: Ad-hoc scripts requiring user approval (`BypassSandbox: true`) must strictly be written to standalone files in the workspace root `/scratch/<name>.py`.
+- **Multi-Session Provenance Headers**: Every scratch script must include explicit provenance tracking in its top-level header:
 
-### 2. Workspace Approval Bootstrapping Gate
-- Fresh workspaces must execute `just bootstrap-approvals` (`scripts/bootstrap_approvals.py --execute`) to prime the IDE command approval cache across all safe, read-only command shapes before starting feature development.
+```python
+# Created Session ID: <conversation-id>
+# Modified Session IDs: [<conversation-id>, ...]
+```
+
+- **Zero-Blob Standard**: Multi-line inline command blobs (`python -c "..."`) and shell loops (`for r in ...`) are strictly prohibited.
+- **Pre-Execution Chat Links**: The agent must output a clickable Markdown file link in chat prior to invoking `run_command`.
+
+### 2. Scratch Archival & Anti-Clutter Lifecycle
+- Stale, single-purpose exploration, or superseded scripts are moved to `/scratch/archive/` to keep the active toolkit clean while retaining historical context.
+
+### 3. Workspace Approval Bootstrapping Gate
+- Fresh workspaces execute `just bootstrap-approvals` (`scripts/bootstrap_approvals.py --execute`) to prime the IDE command approval cache across safe command shapes before starting feature development.
 
 
 

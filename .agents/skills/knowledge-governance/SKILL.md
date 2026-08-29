@@ -61,6 +61,12 @@ When synthesizing new insights, evaluate each finding against this scalability m
 - **Loading Mode**: Reference / Human Browsing (`docs.credence.run`).
 - **Best For**: Complete mathematical proofs, protocol sequence diagrams, and exhaustive API references.
 
+### 1.5. Triad Parity & Bidirectional Documentation Maintenance
+When delivering architectural features or processing `/learn` workflows:
+- **Review Existing Blueprints**: Systematically audit existing technical blueprints (`docs/blueprints/`) and invariant cards for schema drift, deprecated defaults, or stale fallback references.
+- **Triad Lockstep PRs**: Features spanning compute, edge, or governance must stage changes across all three repositories (`credence`, `credence-docs`, `credence-agent`). Single-repo PR dropouts are prohibited.
+- **Workspace Root Scratch Topology**: Scratch scripts reside exclusively in the workspace root `/scratch/<name>.py` outside all git repositories. Zero in-repo `scratch/` folders.
+
 ---
 
 ## 2. Invariant Mutability, Constitutional Review & The Demotion Highway

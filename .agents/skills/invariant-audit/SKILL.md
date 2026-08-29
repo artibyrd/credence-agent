@@ -102,6 +102,16 @@ This skill enforces the **3-Tier Invariant Scalability Architecture** across fiv
   4. *Gate 4 (Standalone Telemetry Reality)*: Asserts standalone unpeered nodes report $0.0\%$ worksharing efficiency and exact database peer counts with zero artificial safety floors.
 - **Genesis State**: Fresh, unpeered nodes report authentic `STANDALONE (UNPEERED)` status ($N=1, f=0$) with authentic receipts or an explicit disconnected state.
 
+### 12. Triad Completeness & Bidirectional Documentation Maintenance (`inv-documentation-expansion`)
+- **Bidirectional Documentation Review**: Whenever core data models, fallback heuristics, or invariant behaviors change:
+  1. *Review Existing Docs*: Audit existing blueprints (`docs/blueprints/`), architecture specs, and invariant definitions for stale schemas or deprecated mock values (`test_docs_schema_and_blueprint_staleness_guard`).
+  2. *Expand Docs*: Author case studies (`blog/`) and blueprints to document new architectural guarantees.
+- **Triad Lockstep PRs**: Prohibit single-repo PR dropouts on cross-plane features. Changes must be synchronized across `credence`, `credence-docs`, and `credence-agent`.
+
+### 13. Workspace Root Scratch Directory Topology (`inv-clean-scratch-scripts`)
+- **Strict Root Placement**: Scratch scripts belong exclusively in the workspace root `/scratch/<name>.py` outside all git repositories.
+- **Zero Sub-repo Scratch Folders**: Sub-repos must never contain a `scratch/` folder. Verified by `test_workspace_root_scratch_directory_isolation`.
+
 ---
 
 ## 2. Turnkey Audit Execution Commands

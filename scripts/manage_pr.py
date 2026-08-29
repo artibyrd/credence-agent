@@ -115,12 +115,22 @@ This pull request bundles verified architectural milestones, governance enhancem
     return md
 
 def create_or_update_prs(title: str) -> None:
+    # Shift-Left Triad Completeness Pre-Check (inv-documentation-expansion)
+    cred_branch = get_branch_name(REPOS["credence"])
+    docs_branch = get_branch_name(REPOS["credence-docs"])
+    cred_commits = get_commits_for_branch(REPOS["credence"], cred_branch) if cred_branch != "main" else []
+    docs_commits = get_commits_for_branch(REPOS["credence-docs"], docs_branch) if docs_branch != "main" else []
+    if cred_commits and not docs_commits:
+        print("⚠️  \033[1;33mTRIAD NOTICE (inv-documentation-expansion):\033[0m")
+        print("   Staged code commits detected in 'credence' with 0 commits in 'credence-docs'.")
+        print("   Remember to review existing blueprints and expand documentation before requesting Mk1 review.\n")
+
     for repo_name, repo_path in REPOS.items():
         branch = get_branch_name(repo_path)
         if branch == "main":
             print(f"⏩ Skipping {repo_name} (already on main).")
             continue
-        
+
         print(f"=== Managing PR for {repo_name} ({branch} -> main) ===")
         commits = get_commits_for_branch(repo_path, branch)
         owners = get_authorized_codeowners(repo_path)

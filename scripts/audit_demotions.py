@@ -113,6 +113,11 @@ def main() -> int:
         default=None,
         help="Path to AGENTS.md file",
     )
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="Exit with code 1 if total tokens exceed 800 or demotion candidates are found",
+    )
     args = parser.parse_args()
 
     script_dir = Path(__file__).resolve().parent
@@ -168,6 +173,13 @@ def main() -> int:
         print(f"\n  💡 Total Potential Savings: ~{total_potential_savings} tokens per turn if demoted to Tier 2.")
 
     print("=" * 72 + "\n")
+    if args.strict:
+        if total_est_tokens >= 800:
+            print("❌ Strict audit failure: Tier 0 tokens exceed 800 ceiling.", file=sys.stderr)
+            return 1
+        if demotion_candidates:
+            print("❌ Strict audit failure: Mechanical demotion candidates found in Tier 0.", file=sys.stderr)
+            return 1
     return 0
 
 

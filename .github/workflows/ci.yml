@@ -44,5 +44,6 @@ jobs:
         run: |
           python3 -m py_compile scripts/*.py
           echo "✅ Scripts compiled cleanly."
-          python3 scripts/audit_demotions.py || true
+          python3 scripts/lint_skills.py
+          python3 scripts/audit_demotions.py --agents-file rules/AGENTS.md || true
           echo "✅ Invariant scan passed."

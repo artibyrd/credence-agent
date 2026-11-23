@@ -14,10 +14,10 @@ import sys
 
 REPO_CHECKS = {
     "artibyrd/credence": [
-        "CI / Lint & Type Check (pull_request)",
-        "CI / Hermetic Unit & Gauntlet Suite",
-        "CI / Terraform Validation (pull_request)",
-        "CI / Validate PR & Branch Naming Conventions",
+        "Lint & Type Check",
+        "Hermetic Unit & Gauntlet Tests",
+        "Terraform Validation",
+        "Validate PR & Branch Naming Conventions",
     ],
     "artibyrd/credence-docs": [
         "Zero-Build Deploy",

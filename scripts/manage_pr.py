@@ -180,8 +180,13 @@ def check_pr_status() -> None:
         else:
             print("No open pull requests.")
 
+# Merge credence-docs before credence so credence's deploy-edge.yml clones updated main docs
+MERGE_ORDER = ("credence-docs", "credence-agent", "credence")
+
+
 def merge_pr(pr_arg: str, force: bool = False) -> None:
-    for repo_name, repo_path in REPOS.items():
+    for repo_name in MERGE_ORDER:
+        repo_path = REPOS[repo_name]
         branch = get_branch_name(repo_path)
         if branch == "main":
             continue

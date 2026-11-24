@@ -1,7 +1,7 @@
 {
   "name": "credence-agent",
   "displayName": "Credence Ecosystem Toolkit",
-  "version": "2.22.1",
+  "version": "2.23.0",
   "description": "Domain-specific skills, self-contained project overlays, and governance tooling for the Credence epistemic verification ecosystem.",
   "author": {
     "name": "Arthur Davis",

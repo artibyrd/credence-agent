@@ -11,8 +11,10 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
+import tomllib
 
 ECOSYSTEM_DIR = Path(__file__).resolve().parent.parent.parent
 REPOS = {
@@ -20,6 +22,100 @@ REPOS = {
     "credence-docs": ECOSYSTEM_DIR / "credence-docs",
     "credence-agent": ECOSYSTEM_DIR / "credence-agent",
 }
+
+# Topological order: credence-docs first so credence's CI & edge deploy see updated docs
+MERGE_ORDER = ("credence-docs", "credence-agent", "credence")
+
+SEMVER_RE = re.compile(r"^v?([0-9]+)\.([0-9]+)\.([0-9]+)$")
+TITLE_VER_RE = re.compile(r"^\[v([0-9]+\.[0-9]+\.[0-9]+)\]\s+")
+DOCS_VER_RE = re.compile(r"CURRENT_ECOSYSTEM_VERSION\s*=\s*['\"]v([0-9]+\.[0-9]+\.[0-9]+)['\"]")
+
+
+def parse_semver(version_str: str) -> tuple[int, int, int]:
+    match = SEMVER_RE.match(version_str.strip())
+    if not match:
+        raise ValueError(f"Invalid semantic version: {version_str!r}")
+    return (int(match.group(1)), int(match.group(2)), int(match.group(3)))
+
+
+def read_triad_versions(ecosystem_dir: Path | None = None) -> dict[str, str]:
+    """Read current branch semantic versions across the 3 Credence repos."""
+    root = ecosystem_dir or ECOSYSTEM_DIR
+    versions: dict[str, str] = {}
+
+    pyproject = root / "credence" / "pyproject.toml"
+    if pyproject.exists():
+        data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+        ver = data.get("tool", {}).get("poetry", {}).get("version") or data.get("project", {}).get("version")
+        if isinstance(ver, str) and ver.strip():
+            versions["credence"] = ver.strip()
+
+    app_js = root / "credence-docs" / "app.js"
+    if app_js.exists():
+        m = DOCS_VER_RE.search(app_js.read_text(encoding="utf-8"))
+        if m:
+            versions["credence-docs"] = m.group(1)
+
+    plugin_json = root / "credence-agent" / "plugin.json"
+    if plugin_json.exists():
+        pdata = json.loads(plugin_json.read_text(encoding="utf-8"))
+        pver = pdata.get("version")
+        if isinstance(pver, str) and pver.strip():
+            versions["credence-agent"] = pver.strip()
+
+    return versions
+
+
+def read_main_release_version(credence_repo: Path) -> str | None:
+    """Read current release version from origin/main:pyproject.toml (fallback: main)."""
+    for ref in ("origin/main", "main"):
+        code, out, _ = run_cmd(["git", "show", f"{ref}:pyproject.toml"], cwd=credence_repo)
+        if code == 0 and out:
+            data = tomllib.loads(out)
+            ver = data.get("tool", {}).get("poetry", {}).get("version") or data.get("project", {}).get("version")
+            if isinstance(ver, str) and ver.strip():
+                return ver.strip()
+    return None
+
+
+def validate_triad_version_parity(
+    title: str,
+    *,
+    triad_versions: dict[str, str] | None = None,
+    main_version: str | None = None,
+) -> list[str]:
+    """Deterministically verify triad manifest parity, PR title tag, and version bump above main."""
+    errors: list[str] = []
+    versions = triad_versions if triad_versions is not None else read_triad_versions()
+    unique_versions = sorted(set(versions.values()))
+
+    if not versions:
+        return ["Could not read manifest versions across the Credence triad."]
+
+    if len(unique_versions) > 1:
+        summary = ", ".join(f"{k}=v{v}" for k, v in sorted(versions.items()))
+        errors.append(f"Triad manifest version drift detected ({summary}). Run 'just sync-version <X.Y.Z>' first.")
+
+    branch_version = versions.get("credence") or unique_versions[0]
+
+    title_match = TITLE_VER_RE.match(title)
+    if title_match:
+        title_ver = title_match.group(1)
+        if title_ver != branch_version:
+            errors.append(
+                f"PR title declares v{title_ver}, but branch manifests are at v{branch_version}. "
+                f"Run 'just sync-version {title_ver}' before running 'just pr-create'."
+            )
+
+    base_ver = main_version if main_version is not None else read_main_release_version(REPOS["credence"])
+    if base_ver is not None and parse_semver(branch_version) <= parse_semver(base_ver):
+        errors.append(
+            f"Branch version v{branch_version} is not bumped above main release version v{base_ver} "
+            "(new work version == current release version). "
+            "Run 'just sync-version <next-semver>' and update changelogs before staging PRs."
+        )
+
+    return errors
 
 REPO_DESCRIPTIONS = {
     "credence": "Compute & Execution Plane (FastAPI, FastMCP, SQLite, Cloud Run)",
@@ -115,6 +211,14 @@ This pull request bundles verified architectural milestones, governance enhancem
     return md
 
 def create_or_update_prs(title: str) -> None:
+    # Deterministic Tier 2 Version-Bump & PR-Title Parity Gate (hard fail before pushing)
+    version_errors = validate_triad_version_parity(title)
+    if version_errors:
+        print("❌ \033[1;31mPR STAGING BLOCKED (Version-Bump & Parity Gate):\033[0m")
+        for err in version_errors:
+            print(f"   • {err}")
+        sys.exit(1)
+
     # Shift-Left Triad Completeness Pre-Check (inv-documentation-expansion)
     cred_branch = get_branch_name(REPOS["credence"])
     docs_branch = get_branch_name(REPOS["credence-docs"])
@@ -125,7 +229,8 @@ def create_or_update_prs(title: str) -> None:
         print("   Staged code commits detected in 'credence' with 0 commits in 'credence-docs'.")
         print("   Remember to review existing blueprints and expand documentation before requesting Mk1 review.\n")
 
-    for repo_name, repo_path in REPOS.items():
+    for repo_name in MERGE_ORDER:
+        repo_path = REPOS[repo_name]
         branch = get_branch_name(repo_path)
         if branch == "main":
             print(f"⏩ Skipping {repo_name} (already on main).")
@@ -179,10 +284,6 @@ def check_pr_status() -> None:
             print(out)
         else:
             print("No open pull requests.")
-
-# Merge credence-docs before credence so credence's deploy-edge.yml clones updated main docs
-MERGE_ORDER = ("credence-docs", "credence-agent", "credence")
-
 
 def merge_pr(pr_arg: str, force: bool = False) -> None:
     for repo_name in MERGE_ORDER:

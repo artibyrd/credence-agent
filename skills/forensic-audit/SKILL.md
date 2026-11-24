@@ -23,6 +23,9 @@ Use this skill when auditing web content, investigating local news publications,
 
 ## Granular Cluster-Level Swarm Architecture
 Audits are partitioned at the bounded `TaxonomyCluster` level (3–6 rules per specialist micro-agent pass):
+
+> **Parallel Swarm Acceleration (Optional — Antigravity v2.32+):** When running multi-cluster audits inside Antigravity, you may orchestrate independent specialist cluster passes in parallel using the `run_workflow` tool (`parallel(...)` over `TaxonomyCluster` slices, then aggregate verbatim findings and compute DCI). On harnesses without `run_workflow`, execute the same cluster slices sequentially or via `credence audit`.
+
 1. **Fallacy Specialists**:
    - *Relevance & Personal Attacks* (`FALLACY-1.x`: Ad Hominem, Tu Quoque, Poisoning Well, Genetic Fallacy)
    - *Presumption & Circularity* (`FALLACY-2.x`: Begging Question, False Dilemma, Loaded Question, Cherry-Picking)

@@ -1,5 +1,20 @@
 {
   "name": "credence-agent",
-  "version": "2.22.1",
-  "description": "Complete Google Antigravity developer toolkit, skills, rules, and invariants for the Credence ecosystem."
+  "displayName": "Credence Ecosystem Toolkit",
+  "version": "2.23.0",
+  "description": "Domain-specific skills, self-contained project overlays, and governance tooling for the Credence epistemic verification ecosystem.",
+  "author": {
+    "name": "Arthur Davis",
+    "url": "https://github.com/artibyrd"
+  },
+  "homepage": "https://docs.credence.run",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/artibyrd/credence-agent"
+  },
+  "suggestedPrompts": [
+    "Audit this article URL using the Credence forensic-audit cluster swarm protocol",
+    "Run a Credence invariant-audit across manifests, governance gates, and attestations",
+    "Check active Gemini model lifecycle freshness and run the Golden 12 epistemic-benchmark"
+  ]
 }
